@@ -7,7 +7,6 @@ import 'TutorPage.dart';
 import 'ResourcePage.dart';
 import 'OptionsPage.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -20,10 +19,10 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'EngLinks App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         home: MyHomePage(),
       ),
@@ -31,8 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyAppState extends ChangeNotifier {
-}
+class MyAppState extends ChangeNotifier {}
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -70,17 +68,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     void onItemTapped(int index) {
       setState(() {
-      _selectedIndex = index;
+        _selectedIndex = index;
       });
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Title")
-        ),
-        
+          title: Center(
+        child: const Text("EngLinks"),
+      )),
       body: page,
-
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -93,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            label: 'School',
+            label: 'Tutoring',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
@@ -105,7 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.purple[800],
+        unselectedItemColor: Color.fromARGB(255, 150, 104, 170),
         onTap: onItemTapped,
       ),
     );
@@ -113,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class HomePage extends StatelessWidget {
-  @override 
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
@@ -122,7 +120,7 @@ class HomePage extends StatelessWidget {
 }
 
 class EventsPage extends StatelessWidget {
-  @override 
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
@@ -131,7 +129,7 @@ class EventsPage extends StatelessWidget {
 }
 
 class TutorPage extends StatelessWidget {
-  @override 
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
@@ -140,7 +138,7 @@ class TutorPage extends StatelessWidget {
 }
 
 class ResourcePage extends StatelessWidget {
-  @override 
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
@@ -149,11 +147,10 @@ class ResourcePage extends StatelessWidget {
 }
 
 class OptionsPage extends StatelessWidget {
-  @override 
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
     return Placeholder();
   }
 }
-
