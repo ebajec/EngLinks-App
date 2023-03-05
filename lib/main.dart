@@ -1,11 +1,12 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'HomePage.dart';
-import 'EventsPage.dart';
-import 'TutorPage.dart';
-import 'ResourcePage.dart';
-import 'OptionsPage.dart';
+import 'app_state.dart';
+import 'home_page.dart';
+import 'events_page.dart';
+import 'tutor_page.dart';
+import 'resource_page.dart';
+import 'options_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,32 +18,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+      create: (context) => AppState(),
       child: MaterialApp(
         title: 'EngLinks App',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: MyHomePage(),
+        home: MainDisplay(),
       ),
     );
   }
 }
 
-class MyAppState extends ChangeNotifier {}
-
-class MyHomePage extends StatefulWidget {
+/* Main display of the app, including the bottom navigation bar and 
+the selected page.  This is the widget which will be displayed for the user at 
+all times while using the app.  
+*/
+class MainDisplay extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainDisplay> createState() => _MainDisplayState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = context.watch<AppState>();
 
     Widget page;
 
@@ -107,50 +110,5 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: onItemTapped,
       ),
     );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    return Placeholder();
-  }
-}
-
-class EventsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    return Placeholder();
-  }
-}
-
-class TutorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    return Placeholder();
-  }
-}
-
-class ResourcePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    return Placeholder();
-  }
-}
-
-class OptionsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
-    return Placeholder();
   }
 }
