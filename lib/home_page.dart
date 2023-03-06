@@ -10,16 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void _handleInput(String? input) {
-    if (input != null) {
-      try {
-        int num = input as int;
-      } catch (e) {
-        return;
-      }
-    }
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
