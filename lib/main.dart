@@ -89,7 +89,7 @@ class _MainDisplayState extends State<MainDisplay> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
-            label: 'Calendar',
+            label: 'Events',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
