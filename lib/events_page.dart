@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
+import 'my_styles.dart';
 
 /* We'll have to import the table calendar library from pub.dev to get started 
 here. */
@@ -27,23 +28,9 @@ class CalendarSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle titleStyle = TextStyle(
-        fontSize: 50,
-        fontFamily: 'Helvetica',
-        fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 85, 56, 136));
-    TextStyle buttonTextStyle = TextStyle(
-      fontSize: 42,
-      fontFamily: 'Helvetica',
-    );
-    ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-      primary: Theme.of(context).colorScheme.secondary,
-      onPrimary: Colors.white,
-      shadowColor: Theme.of(context).colorScheme.outline,
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
-      minimumSize: Size(360, 120),
-    );
+    TextStyle titleStyle = MyTextStyles.titleLarge(context);
+    TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
+    ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 
     return Center(
       child: Column(
@@ -86,10 +73,13 @@ class CalendarSelectionScreen extends StatelessWidget {
 class CalendarFirstYear extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        BackButton(),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'First year events',
+          style: MyTextStyles.appBarLarge(context),
+        ),
+      ),
     );
   }
 }
@@ -97,37 +87,11 @@ class CalendarFirstYear extends StatelessWidget {
 class CalendarUpperYear extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        BackButton(),
-      ],
-    );
-  }
-}
-
-class BackButton extends StatelessWidget {
-  const BackButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-      primary: Theme.of(context).colorScheme.secondary,
-      onPrimary: Colors.white,
-      shadowColor: Theme.of(context).colorScheme.outline,
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
-      minimumSize: Size(50, 50),
-    );
-
-    return ElevatedButton.icon(
-      style: buttonStyle,
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      icon: Icon(Icons.arrow_back),
-      label: Text('Back'),
+    return Scaffold(
+      appBar: AppBar(
+        title:
+            Text('Upper year events', style: MyTextStyles.appBarLarge(context)),
+      ),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'events_page.dart';
 import 'tutor_page.dart';
 import 'resource_page.dart';
 import 'options_page.dart';
+import 'my_styles.dart';
 
 void main() {
   runApp(MyApp());
@@ -70,17 +71,11 @@ class _MainDisplayState extends State<MainDisplay> {
       });
     }
 
-    TextStyle titleStyle = TextStyle(
-        fontSize: 24,
-        fontFamily: 'Helvetica',
-        fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 85, 56, 136));
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "EngLinks",
-          style: titleStyle,
+          style: MyTextStyles.appBarLarge(context),
         ),
         backgroundColor: Color.fromARGB(255, 240, 240, 240),
       ),
