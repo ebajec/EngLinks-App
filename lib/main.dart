@@ -43,30 +43,24 @@ class MainDisplay extends StatefulWidget {
 class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
 
+  var pages = <Widget>[
+    HomePage(),
+    EventsPage(),
+    TutorPage(),
+    ResourcePage(),
+    OptionsPage()
+  ];
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
     Widget page;
 
-    switch (_selectedIndex) {
-      case 0:
-        page = HomePage();
-        break;
-      case 1:
-        page = EventsPage();
-        break;
-      case 2:
-        page = TutorPage();
-        break;
-      case 3:
-        page = ResourcePage();
-        break;
-      case 4:
-        page = OptionsPage();
-        break;
-      default:
-        throw UnimplementedError('no widget for $_selectedIndex');
+    try {
+      page = pages[_selectedIndex];
+    } catch (e) {
+      throw UnimplementedError('no widget for $_selectedIndex');
     }
 
     void onItemTapped(int index) {
