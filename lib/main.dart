@@ -1,4 +1,3 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -89,7 +88,7 @@ class _MainDisplayState extends State<MainDisplay> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
-            label: 'Calendar',
+            label: 'Events',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),

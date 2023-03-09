@@ -1,4 +1,3 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -10,16 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void _handleInput(String? input) {
-    if (input != null) {
-      try {
-        int num = input as int;
-      } catch (e) {
-        return;
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
