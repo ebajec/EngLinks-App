@@ -1,4 +1,3 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -7,6 +6,7 @@ import 'events_page.dart';
 import 'tutor_page.dart';
 import 'resource_page.dart';
 import 'options_page.dart';
+import 'my_styles.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
         title: 'EngLinks App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 85, 56, 136)),
         ),
         home: MainDisplay(),
       ),
@@ -71,9 +72,12 @@ class _MainDisplayState extends State<MainDisplay> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Center(
-        child: const Text("EngLinks"),
-      )),
+        title: Text(
+          "EngLinks",
+          style: MyTextStyles.appBarLarge(context),
+        ),
+        backgroundColor: Color.fromARGB(255, 240, 240, 240),
+      ),
       body: page,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
