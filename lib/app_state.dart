@@ -8,22 +8,6 @@ user settings.  Other information pertaining to the state of a particular page
 should be contained within the state of that page.
 */
 class AppState extends ChangeNotifier {
-  int glob = 5;
-  void setGlob(int x) {
-    glob = x;
-  }
+
 }
 
-class GlobDisplay extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Text(appState.glob.toString()),
-      ),
-    );
-  }
-}
