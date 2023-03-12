@@ -13,6 +13,6 @@ class _OptionsPageState extends State<OptionsPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    return GlobDisplay();
+    return Placeholder();
   }
 }

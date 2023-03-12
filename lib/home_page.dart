@@ -13,6 +13,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    return GlobDisplay();
+    return Placeholder();
   }
 }
