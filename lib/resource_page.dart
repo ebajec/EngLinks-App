@@ -8,6 +8,6 @@ class ResourcePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    return GlobDisplay();
+    return Placeholder();
   }
 }
