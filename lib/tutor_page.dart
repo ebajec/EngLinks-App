@@ -1,3 +1,4 @@
+import 'package:englinks_app/my_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -16,49 +17,90 @@ class _TutorPageState extends State<TutorPage> {
     var appState = context.watch<AppState>();
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Type a number in here...',
-              ),
-              onSubmitted: (String value) async {
-                String msgText, msgTitleText;
-                try {
-                  int x = int.parse(value);
-                  setState(() {
-                    appState.setGlob(x);
-                  });
-                  msgText = 'The number has been set to "$value".';
-                  msgTitleText = 'Yay!';
-                } catch (e) {
-                  msgText = 'A number was not entered';
-                  msgTitleText = 'Uh oh...';
-                }
-
-                await showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(msgTitleText),
-                      content: Text(msgText),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }),
+      children: [
+        SizedBox(
+          height: 50,
         ),
-        SizedBox(height: 20),
+        Text('Request a Tutor', style: MyTextStyles.titleMedium(context)),
+        Center(child: TutorForm()),
       ],
+    );
+  }
+}
+
+/*Form for tutor request data contains text fields for name, email, and comments,
+as well as a drop down menu for courses and available times.  */
+class TutorForm extends StatefulWidget {
+  const TutorForm({super.key});
+
+  @override
+  TutorFormState createState() {
+    return TutorFormState();
+  }
+}
+
+// Define a corresponding State class.
+// This class holds data related to the form.
+class TutorFormState extends State<TutorForm> {
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  //
+  // Note: This is a `GlobalKey<FormState>`,
+  // not a GlobalKey<MyCustomFormState>.
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          Container(
+              width: screenWidth * 0.9,
+              child: Column(
+                children: [
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This field is required.';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This field is required.';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              )),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Theme.of(context).colorScheme.secondary,
+              onPrimary: Colors.white,
+              shadowColor: Theme.of(context).colorScheme.outline,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6.0)),
+              minimumSize: Size(100, 50),
+            ),
+            child: const Text('Submit'),
+          ),
+        ],
+      ),
     );
   }
 }
