@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'home_page.dart';
-import 'events_page.dart';
-import 'tutor_page.dart';
-import 'resource_page.dart';
-import 'options_page.dart';
 
 /*
 * Global application state.  Only add stuff to this which will need to be shared

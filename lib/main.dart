@@ -41,16 +41,16 @@ class MainDisplay extends StatefulWidget {
   State<MainDisplay> createState() => _MainDisplayState();
 }
 
-var pages = <Widget>[
-  HomePage(),
-  EventsPage(),
-  TutorPage(key: UniqueKey()),
-  ResourcePage(),
-  OptionsPage()
-];
-
 class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
+
+  var pages = <Widget>[
+    HomePage(),
+    EventsPage(),
+    TutorPage(key: UniqueKey()),
+    ResourcePage(),
+    OptionsPage()
+  ];
 
   @override
   Widget build(BuildContext context) {

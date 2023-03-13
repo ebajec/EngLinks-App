@@ -48,7 +48,7 @@ class TutorFormState extends State<TutorForm> {
   String? _email;
   String? _course;
   String? _tutorFrequency;
-  String? _comment = '';
+  String? _comment;
 
   List<String> _courses = ['APSC 111', 'APSC 112'];
   List<String> _tutorTimes = ['Weekly', 'Bi-weekly'];
@@ -59,7 +59,6 @@ class TutorFormState extends State<TutorForm> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     TextStyle boldCaption = TextStyle(
       fontWeight: FontWeight.bold,
@@ -75,7 +74,6 @@ class TutorFormState extends State<TutorForm> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          if (_name != null) Text(_name!),
           //This SizedBox is all the input
           SizedBox(
               width: screenWidth * 0.9,
@@ -88,8 +86,10 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   TextFormField(
-                    onSaved: (value) {
-                      _name = value;
+                    onChanged: (value) {
+                      setState(() {
+                        _name = value;
+                      });
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -110,8 +110,10 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   TextFormField(
-                    onSaved: (value) {
-                      _email = value;
+                    onChanged: (value) {
+                      setState(() {
+                        _email = value;
+                      });
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -133,7 +135,9 @@ class TutorFormState extends State<TutorForm> {
                   ),
                   FormDropdownInput<String?>(
                     onSaved: (value) {
-                      _course = value;
+                      setState(() {
+                        _course = value;
+                      });
                     },
                     value: _selectedCourse,
                     items: _courses,
@@ -174,8 +178,13 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   TextFormField(
-                    onFieldSubmitted: (value) {
-                      _comment = value;
+                    validator: (value) {
+                      _comment ??= '';
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _comment = value;
+                      });
                     },
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -192,13 +201,15 @@ class TutorFormState extends State<TutorForm> {
             child: ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
+                  String formData = '''{
+                    '"name":"${_name!}",
+                    "course":"${_course!}",
+                    "freq":"${_tutorFrequency!}",
+                    "comment":"${_comment!}" 
+                  }''';
+
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(_name! +
-                            _email! +
-                            _course! +
-                            _tutorFrequency! +
-                            _comment!)),
+                    SnackBar(content: Text(formData)),
                   );
                 }
               },
