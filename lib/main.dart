@@ -78,7 +78,7 @@ class _MainDisplayState extends State<MainDisplay> {
         ),
         backgroundColor: Color.fromARGB(255, 240, 240, 240),
       ),
-      body: page,
+      body: SingleChildScrollView(child: page),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

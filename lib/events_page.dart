@@ -27,7 +27,7 @@ class CalendarSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle titleStyle = MyTextStyles.titleLarge(context);
+    TextStyle titleStyle = MyTextStyles.titleMedium(context);
     TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
     ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 

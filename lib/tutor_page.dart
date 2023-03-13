@@ -39,36 +39,41 @@ class TutorForm extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class TutorFormState extends State<TutorForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+
+  List<String> _courses = ['APSC 111', 'APSC 112'];
+  List<String> _tutorTimes = ['Weekly', 'Bi-weekly'];
+
+  String? _selectedCourse;
+  String? _selectedTutorTime;
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    TextStyle boldCaption = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+      fontFamily: 'Helvetica',
+      color: Color.fromARGB(255, 65, 65, 65),
+    );
+
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
-          Container(
+          //This SizedBox is all the input
+          SizedBox(
               width: screenWidth * 0.9,
               child: Column(
                 children: [
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required.';
-                      }
-                      return null;
-                    },
+                  //Input for name
+                  AlignedText(
+                    alignment: Alignment.centerLeft,
+                    text: 'Enter your name',
+                    style: boldCaption,
                   ),
                   TextFormField(
                     validator: (value) {
@@ -77,30 +82,179 @@ class TutorFormState extends State<TutorForm> {
                       }
                       return null;
                     },
+                    decoration: InputDecoration(
+                      labelText: 'First, Last',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  //Input for queens email
+                  AlignedText(
+                    alignment: Alignment.centerLeft,
+                    text: 'Enter your email',
+                    style: boldCaption,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This field is required.';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'NetID@queensu.ca',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  //Dropdown list for courses
+                  AlignedText(
+                    alignment: Alignment.centerLeft,
+                    text: 'Choose a course',
+                    style: boldCaption,
+                  ),
+                  FormDropdownInput<String?>(
+                    value: _selectedCourse,
+                    items: _courses,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCourse = value;
+                      });
+                    },
+                    errorText: 'No course was selected!',
+                    hintText: 'Select course...',
+                  ),
+
+                  //Dropdown list for tutoring frequency
+                  AlignedText(
+                    alignment: Alignment.centerLeft,
+                    text: 'Choose a tutoring frequency',
+                    style: boldCaption,
+                  ),
+                  FormDropdownInput<String?>(
+                    value: _selectedTutorTime,
+                    items: _tutorTimes,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedTutorTime = value;
+                      });
+                    },
+                    errorText: 'No frequency was selected!',
+                    hintText: 'Select frequency...',
+                  ),
+
+                  //additional comments box
+                  AlignedText(
+                    alignment: Alignment.centerLeft,
+                    text: 'Additional comments',
+                    style: boldCaption,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: 'Enter comments...',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ],
               )),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).colorScheme.secondary,
-              onPrimary: Colors.white,
-              shadowColor: Theme.of(context).colorScheme.outline,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6.0)),
-              minimumSize: Size(100, 50),
+          //submission button
+          Padding(
+            padding: const EdgeInsets.all(18),
+            child: ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Processing Data')),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).colorScheme.secondary,
+                onPrimary: Colors.white,
+                shadowColor: Theme.of(context).colorScheme.outline,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.0)),
+                minimumSize: Size(100, 50),
+              ),
+              child: const Text('Submit request'),
             ),
-            child: const Text('Submit'),
           ),
         ],
       ),
+    );
+  }
+}
+
+class AlignedText extends StatelessWidget {
+  final String text;
+  final AlignmentGeometry alignment;
+  final TextStyle style;
+
+  const AlignedText({
+    Key? key,
+    required this.text,
+    required this.alignment,
+    this.style = const TextStyle(),
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: alignment,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(text, style: style),
+      ),
+    );
+  }
+}
+
+class FormDropdownInput<T> extends StatelessWidget {
+  final List<T> items;
+  final String hintText;
+  final String errorText;
+  final T value;
+  final void Function(T?)? onChanged;
+  String? Function(T?)? validator;
+
+  String _getLabel(T val) {
+    return val as String;
+  }
+
+  FormDropdownInput({
+    this.hintText = 'Select an option',
+    this.errorText = 'No item was selected',
+    this.items = const [],
+    required this.value,
+    required this.onChanged,
+  }) {
+    validator = (value) {
+      if (value == null || _getLabel(value).isEmpty) {
+        return errorText;
+      }
+      return null;
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(),
+      ),
+      value: value,
+      items: items.map((item) {
+        return DropdownMenuItem(
+          value: item,
+          child: Text(_getLabel(item)),
+        );
+      }).toList(),
+      onChanged: onChanged,
+      validator: validator,
     );
   }
 }
