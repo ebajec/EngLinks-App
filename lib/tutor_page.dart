@@ -7,6 +7,8 @@ import 'app_state.dart';
 the tutor request.  In _TutorPageState, before the build() method, some control 
 flow will need to assess whether or not the user is logged in. */
 class TutorPage extends StatefulWidget {
+  const TutorPage({super.key});
+
   @override
   State<TutorPage> createState() => _TutorPageState();
 }
@@ -22,7 +24,7 @@ class _TutorPageState extends State<TutorPage> {
           height: 50,
         ),
         Text('Request a Tutor', style: MyTextStyles.titleMedium(context)),
-        Center(child: TutorForm()),
+        Center(child: TutorForm(key: UniqueKey())),
       ],
     );
   }
@@ -42,6 +44,12 @@ class TutorForm extends StatefulWidget {
 class TutorFormState extends State<TutorForm> {
   final _formKey = GlobalKey<FormState>();
 
+  String? _name;
+  String? _email;
+  String? _course;
+  String? _tutorFrequency;
+  String? _comment = '';
+
   List<String> _courses = ['APSC 111', 'APSC 112'];
   List<String> _tutorTimes = ['Weekly', 'Bi-weekly'];
 
@@ -60,10 +68,14 @@ class TutorFormState extends State<TutorForm> {
       color: Color.fromARGB(255, 65, 65, 65),
     );
 
+    _formKey.currentState?.activate();
+    _formKey.currentState?.save();
+
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
+          if (_name != null) Text(_name!),
           //This SizedBox is all the input
           SizedBox(
               width: screenWidth * 0.9,
@@ -76,6 +88,9 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   TextFormField(
+                    onSaved: (value) {
+                      _name = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'This field is required.';
@@ -95,6 +110,9 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   TextFormField(
+                    onSaved: (value) {
+                      _email = value;
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'This field is required.';
@@ -114,6 +132,9 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   FormDropdownInput<String?>(
+                    onSaved: (value) {
+                      _course = value;
+                    },
                     value: _selectedCourse,
                     items: _courses,
                     onChanged: (value) {
@@ -132,6 +153,9 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   FormDropdownInput<String?>(
+                    onSaved: (value) {
+                      _tutorFrequency = value;
+                    },
                     value: _selectedTutorTime,
                     items: _tutorTimes,
                     onChanged: (value) {
@@ -139,7 +163,7 @@ class TutorFormState extends State<TutorForm> {
                         _selectedTutorTime = value;
                       });
                     },
-                    errorText: 'No frequency was selected!',
+                    errorText: 'No times were selected!',
                     hintText: 'Select frequency...',
                   ),
 
@@ -150,6 +174,9 @@ class TutorFormState extends State<TutorForm> {
                     style: boldCaption,
                   ),
                   TextFormField(
+                    onFieldSubmitted: (value) {
+                      _comment = value;
+                    },
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: InputDecoration(
@@ -166,7 +193,12 @@ class TutorFormState extends State<TutorForm> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                    SnackBar(
+                        content: Text(_name! +
+                            _email! +
+                            _course! +
+                            _tutorFrequency! +
+                            _comment!)),
                   );
                 }
               },
@@ -218,6 +250,7 @@ class FormDropdownInput<T> extends StatelessWidget {
   final String errorText;
   final T value;
   final void Function(T?)? onChanged;
+  final void Function(T?)? onSaved;
   String? Function(T?)? validator;
 
   String _getLabel(T val) {
@@ -230,6 +263,7 @@ class FormDropdownInput<T> extends StatelessWidget {
     this.items = const [],
     required this.value,
     required this.onChanged,
+    this.onSaved,
   }) {
     validator = (value) {
       if (value == null || _getLabel(value).isEmpty) {
@@ -255,6 +289,7 @@ class FormDropdownInput<T> extends StatelessWidget {
       }).toList(),
       onChanged: onChanged,
       validator: validator,
+      onSaved: onSaved,
     );
   }
 }

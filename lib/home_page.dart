@@ -4,6 +4,8 @@ import 'app_state.dart';
 
 /* This page shouldn't be much, just a general description of app features. */
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }

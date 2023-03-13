@@ -4,6 +4,8 @@ import 'app_state.dart';
 
 /*Learning resources stuff.  Should mostly be links. */
 class ResourcePage extends StatelessWidget {
+  const ResourcePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();

@@ -41,28 +41,20 @@ class MainDisplay extends StatefulWidget {
   State<MainDisplay> createState() => _MainDisplayState();
 }
 
+var pages = <Widget>[
+  HomePage(),
+  EventsPage(),
+  TutorPage(key: UniqueKey()),
+  ResourcePage(),
+  OptionsPage()
+];
+
 class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
-
-  var pages = <Widget>[
-    HomePage(),
-    EventsPage(),
-    TutorPage(),
-    ResourcePage(),
-    OptionsPage()
-  ];
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-
-    Widget page;
-
-    try {
-      page = pages[_selectedIndex];
-    } catch (e) {
-      throw UnimplementedError('no widget for $_selectedIndex');
-    }
 
     void onItemTapped(int index) {
       setState(() {
@@ -78,7 +70,12 @@ class _MainDisplayState extends State<MainDisplay> {
         ),
         backgroundColor: Color.fromARGB(255, 240, 240, 240),
       ),
-      body: SingleChildScrollView(child: page),
+      body: SingleChildScrollView(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: pages,
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

@@ -7,6 +7,8 @@ import 'my_styles.dart';
 /* We'll have to import the table calendar library from pub.dev to get started 
 here. */
 class EventsPage extends StatefulWidget {
+  const EventsPage({super.key});
+
   @override
   State<EventsPage> createState() => _EventsPageState();
 }
