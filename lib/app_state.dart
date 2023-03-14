@@ -12,6 +12,16 @@ class AppState extends ChangeNotifier {
   void setGlob(int x) {
     glob = x;
   }
+
+  String username = '';
+  void setGlobUserEmail(String user) {
+    username = user;
+  }
+
+  String password = '';
+  void setGlobPassword(String pass) {
+    password = pass;
+  }
 }
 
 class GlobDisplay extends StatelessWidget {
