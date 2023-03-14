@@ -7,6 +7,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:basic_utils/basic_utils.dart';
 
 class EventsPage extends StatefulWidget {
+  const EventsPage({super.key});
+
   @override
   State<EventsPage> createState() => _EventsPageState();
 }
@@ -25,7 +27,7 @@ class CalendarSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle titleStyle = MyTextStyles.titleLarge(context);
+    TextStyle titleStyle = MyTextStyles.titleMedium(context);
     TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
     ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 
