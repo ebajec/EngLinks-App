@@ -4,6 +4,8 @@ import 'app_state.dart';
 
 /*This should mostly just be accessibility options and login settings. */
 class OptionsPage extends StatefulWidget {
+  const OptionsPage({super.key});
+
   @override
   State<OptionsPage> createState() => _OptionsPageState();
 }

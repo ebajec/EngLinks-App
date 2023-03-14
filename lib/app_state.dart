@@ -8,11 +8,6 @@ user settings.  Other information pertaining to the state of a particular page
 should be contained within the state of that page.
 */
 class AppState extends ChangeNotifier {
-  int glob = 5;
-  void setGlob(int x) {
-    glob = x;
-  }
-
   String username = '';
   void setGlobUserEmail(String user) {
     username = user;
@@ -24,16 +19,8 @@ class AppState extends ChangeNotifier {
   }
 }
 
-class GlobDisplay extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Text(appState.glob.toString()),
-      ),
-    );
-  }
+List<double> SizeQuery(BuildContext context) {
+  double width = MediaQuery.of(context).size.width;
+  double height = MediaQuery.of(context).size.height;
+  return [width, height];
 }

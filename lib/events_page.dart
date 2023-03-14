@@ -3,10 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'my_styles.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:basic_utils/basic_utils.dart';
 
-/* We'll have to import the table calendar library from pub.dev to get started 
-here. */
 class EventsPage extends StatefulWidget {
+  const EventsPage({super.key});
+
   @override
   State<EventsPage> createState() => _EventsPageState();
 }
@@ -21,13 +23,11 @@ class _EventsPageState extends State<EventsPage> {
 }
 
 class CalendarSelectionScreen extends StatelessWidget {
-  //look into making this variable obsolete please. some kind of auto-spacing
-  //widget
   final double buttonSpacing = 30;
 
   @override
   Widget build(BuildContext context) {
-    TextStyle titleStyle = MyTextStyles.titleLarge(context);
+    TextStyle titleStyle = MyTextStyles.titleMedium(context);
     TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
     ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 
@@ -69,7 +69,16 @@ class CalendarSelectionScreen extends StatelessWidget {
   }
 }
 
-class CalendarFirstYear extends StatelessWidget {
+class CalendarFirstYear extends StatefulWidget {
+  @override
+  _CalendarFirstYearState createState() => _CalendarFirstYearState();
+}
+
+class _CalendarFirstYearState extends State<CalendarFirstYear> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,17 +88,64 @@ class CalendarFirstYear extends StatelessWidget {
           style: MyTextStyles.appBarLarge(context),
         ),
       ),
+      body: TableCalendar(
+        firstDay: DateTime.utc(2023, 1, 1),
+        lastDay: DateTime.utc(2023, 12, 31),
+        focusedDay: DateTime.now(),
+        calendarFormat: _calendarFormat,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+          });
+        },
+        onPageChanged: (focusedDay) {
+          _focusedDay = focusedDay;
+        },
+      ),
     );
   }
 }
 
-class CalendarUpperYear extends StatelessWidget {
+class CalendarUpperYear extends StatefulWidget {
+  @override
+  _CalendarUpperYearState createState() => _CalendarUpperYearState();
+}
+
+class _CalendarUpperYearState extends State<CalendarUpperYear> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('Upper year events', style: MyTextStyles.appBarLarge(context)),
+        title: Text(
+          'Upper year events',
+          style: MyTextStyles.appBarLarge(context),
+        ),
+      ),
+      body: TableCalendar(
+        firstDay: DateTime.utc(2023, 1, 1),
+        lastDay: DateTime.utc(2023, 12, 31),
+        focusedDay: DateTime.now(),
+        calendarFormat: _calendarFormat,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+          });
+        },
+        onPageChanged: (focusedDay) {
+          _focusedDay = focusedDay;
+        },
       ),
     );
   }
