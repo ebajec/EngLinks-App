@@ -66,8 +66,6 @@ class TutorFormState extends State<TutorForm> {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Sending request...')));
 
-    http.Response? response;
-
     try {
       var response = await http.post(url, body: body);
       return response.body;
