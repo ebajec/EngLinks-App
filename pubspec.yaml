@@ -18,7 +18,7 @@ dependencies:
   json_serializable: ^4.0.2
 
   table_calendar: ^3.0.9
-  basic_utils: ^5.5.1
+  basic_utils: ^3.9.0
 dev_dependencies:
   flutter_launcher_name: "^0.0.1"
   flutter_test:
