@@ -47,9 +47,9 @@ class _MainDisplayState extends State<MainDisplay> {
   var pages = <Widget>[
     HomePage(),
     EventsPage(),
-    TutorPage(key: UniqueKey()),
+    TutorPage(),
     ResourcePage(),
-    OptionsPage()
+    Placeholder()
   ];
 
   @override

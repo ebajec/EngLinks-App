@@ -31,17 +31,20 @@ packages:
       name: async
       sha256: bfe67ef28df125b7dddcea62755991f807aa39a2492a23e1550161692950bbe0
       url: "https://pub.dev"
-      sha256: bfe67ef28df125b7dddcea62755991f807aa39a2492a23e1550161692950bbe0
-      url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
-    version: "2.10.0"
+  basic_utils:
+    dependency: "direct main"
+    description:
+      name: basic_utils
+      sha256: bb04b9ce5a6cbc2b37c54522c200321cc987df243dfd7e59a22e7f4152e67974
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.0"
   boolean_selector:
     dependency: transitive
     description:
       name: boolean_selector
-      sha256: "6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66"
-      url: "https://pub.dev"
       sha256: "6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66"
       url: "https://pub.dev"
     source: hosted

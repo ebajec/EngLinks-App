@@ -7,7 +7,17 @@ between all parts of the app.  This will mostly be stuff like login info and
 user settings.  Other information pertaining to the state of a particular page 
 should be contained within the state of that page.
 */
-class AppState extends ChangeNotifier {}
+class AppState extends ChangeNotifier {
+  String username = '';
+  void setGlobUserEmail(String user) {
+    username = user;
+  }
+
+  String password = '';
+  void setGlobPassword(String pass) {
+    password = pass;
+  }
+}
 
 List<double> SizeQuery(BuildContext context) {
   double width = MediaQuery.of(context).size.width;
