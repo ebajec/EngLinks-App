@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'login.dart';
 
 /*
 * Global application state.  Only add stuff to this which will need to be shared
@@ -8,14 +8,10 @@ user settings.  Other information pertaining to the state of a particular page
 should be contained within the state of that page.
 */
 class AppState extends ChangeNotifier {
-  String username = '';
-  void setGlobUserEmail(String user) {
-    username = user;
-  }
+  AccountInfo accountInfo = AccountInfo();
 
-  String password = '';
-  void setGlobPassword(String pass) {
-    password = pass;
+  bool isLoggedIn() {
+    return accountInfo.retrieveName() != null;
   }
 }
 

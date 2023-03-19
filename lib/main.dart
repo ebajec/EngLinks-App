@@ -1,3 +1,4 @@
+import 'package:englinks_app/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -49,7 +50,7 @@ class _MainDisplayState extends State<MainDisplay> {
     EventsPage(),
     TutorPage(),
     ResourcePage(),
-    Placeholder()
+    OptionsPage(),
   ];
 
   @override
@@ -68,6 +69,8 @@ class _MainDisplayState extends State<MainDisplay> {
           "EngLinks",
           style: MyTextStyles.appBarLarge(context),
         ),
+        //Item in top left corner changes depending on login status
+        actions: [AccountButton(loginState: appState.isLoggedIn())],
         backgroundColor: Color.fromARGB(255, 240, 240, 240),
       ),
       body: SingleChildScrollView(
@@ -104,6 +107,52 @@ class _MainDisplayState extends State<MainDisplay> {
         unselectedItemColor: Color.fromARGB(255, 150, 104, 170),
         onTap: onItemTapped,
       ),
+    );
+  }
+}
+
+class AccountButton extends StatelessWidget {
+  const AccountButton({
+    required this.loginState,
+    super.key,
+  });
+
+  final bool loginState;
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
+    List<Widget> elements = [];
+    if (!loginState) {
+      elements = [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginForm()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundColor: Color.fromARGB(255, 240, 240, 240),
+                shadowColor: Theme.of(context).colorScheme.outline,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1)),
+                minimumSize: Size(100, 50),
+              ),
+              child: Text('Log in', style: MyTextStyles.boldSmall(context))),
+        )
+      ];
+    } else {
+      elements = [Text('Logged in as ${appState.accountInfo.retrieveName()}')];
+    }
+
+    return Row(
+      children: elements,
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'app_state.dart';
+import 'misc_widgets.dart';
 
 /* Tutoring page will need to have input boxes for the user and a button to send
 the tutor request.  In _TutorPageState, before the build() method, some control 
@@ -281,30 +282,6 @@ class TutorFormState extends State<TutorForm> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class AlignedText extends StatelessWidget {
-  final String text;
-  final AlignmentGeometry alignment;
-  final TextStyle style;
-
-  const AlignedText({
-    Key? key,
-    required this.text,
-    required this.alignment,
-    this.style = const TextStyle(),
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: alignment,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(text, style: style),
       ),
     );
   }

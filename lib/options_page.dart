@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'my_styles.dart';
+import 'misc_widgets.dart';
 import 'app_state.dart';
 
 /*This should mostly just be accessibility options and login settings. */
@@ -13,156 +15,59 @@ class OptionsPage extends StatefulWidget {
 class _OptionsPageState extends State<OptionsPage> {
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
 
-    return MyApp();
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-
-    return MaterialApp(
-      //theme: ThemeData(scaffoldBackgroundColor: Color.fromARGB(255, 255, 253, 255)),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: const MyCustomForm(),
-      ),
+    return Column(
+      children: <Widget>[
+        AccountPage(loginState: appState.isLoggedIn()),
+        AccessibilityPage(),
+      ],
     );
   }
 }
 
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({super.key});
+class AccountPage extends StatelessWidget {
+  const AccountPage({
+    required this.loginState,
+    super.key,
+  });
 
-  @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
-  }
-}
-
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  TextEditingController userNameEmailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  final _formKey = GlobalKey<FormState>();
+  final bool loginState;
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          
-          Align(
+
+    return Column(
+      children: [
+        AlignedText(
+          text: 'Account',
+          alignment: Alignment.centerLeft,
+          style: MyTextStyles.titleMedium(context),
+        ),
+        if (!loginState)
+          AlignedText(
+            text: 'You are not logged in. Log in to view account details.',
             alignment: Alignment.centerLeft,
-            child: Container(
-              padding: const EdgeInsets.only(left: 18, right: 18, top: 15, bottom: 0),
-              child: Text("Login to EngLinks Account", style: TextStyle(fontSize: 22)),
-            ),
-          ),
-
-
-          Padding(
-            padding: EdgeInsets.only(left: 25, right: 25, top: 15, bottom: 0),
-            child: TextFormField(
-              controller: userNameEmailController,
-              decoration: InputDecoration(
-                hintText: 'Username/Email',
-                contentPadding: const EdgeInsets.only(left: 18, right: 18),
-                border: OutlineInputBorder(),
-              ),
-              // The validator receives the text that the user has entered.
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a valid username or email address';
-                }else {
-                  setState(() {
-                    appState.setGlobUserEmail(value);
-                  });
-                }
-                return null;
-              },
-            ),
-          ),
-          
-          Padding(
-            padding: const EdgeInsets.only(left: 25, right: 25, top: 15, bottom: 15),
-            child: TextFormField(
-              controller: passwordController,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                contentPadding: const EdgeInsets.only(left: 18, right: 18),
-                border: OutlineInputBorder(),
-              ),
-              // The validator receives the text that the user has entered.
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a valid password';
-                }else {
-                  setState(() {
-                    appState.setGlobUserEmail(value);
-                  });
-                }
-                return null;
-              },
-            ),
-          ),
-
-          Container(
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.only(bottom: 15),
-            child: SizedBox(
-              height: 40,
-              width: 200,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Validate returns true if the form is valid, or false otherwise.
-                  if (_formKey.currentState!.validate()) {
-                    // If the form is valid, display a snackbar. In the real world,
-                    // you'd often call a server or save the information in a database.
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Attempting to log in...')),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurple, // Background color
-                ),
-                child: const Text('Login'),
-              ),
-            ),
-          ),
-
-          Divider(
-            color: Colors.black, //color of divider
-            height: 5, //height spacing of divider
-            thickness: 3, //thickness of divider line
-            indent: 15, //spacing at the start of divider
-            endIndent: 15, //spacing at the end of divider
-          ),
-
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              padding: const EdgeInsets.only(left: 18, right: 18, top: 15, bottom: 0),
-              child: Text("Accessibility Settings", style: TextStyle(fontSize: 22)),
-            ),
           )
-
-        ],
-      ),
+        else
+          Text('hello ${appState.accountInfo.retrieveName()}!'),
+      ],
     );
+  }
+}
+
+class AccessibilityPage extends StatelessWidget {
+  const AccessibilityPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlignedText(
+        text: "Accessibility Settings",
+        alignment: Alignment.centerLeft,
+        style: MyTextStyles.titleMedium(context));
   }
 }
 

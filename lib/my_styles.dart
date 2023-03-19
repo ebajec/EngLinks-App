@@ -33,6 +33,14 @@ class MyTextStyles {
         color: Color.fromARGB(255, 65, 65, 65));
   }
 
+  static TextStyle boldSmall(BuildContext context) {
+    return TextStyle(
+        fontSize: 20,
+        fontFamily: 'Helvetica',
+        fontWeight: FontWeight.bold,
+        color: Color.fromARGB(255, 65, 65, 65));
+  }
+
   static TextStyle buttonLarge(BuildContext context) {
     return TextStyle(
       fontSize: 42,
