@@ -1,58 +1,9 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'my_styles.dart';
 import 'app_state.dart';
-
-class AccountInfo {
-  AccountInfo();
-
-  String? _username;
-
-  String? retrieveName() {
-    return _username;
-  }
-
-  //Updates account info fields after validating with server. Returns message
-  //with information about login attempt.
-  //
-  //Server must
-  Future<String> update(
-      String username, String password, Uri validatorUrl) async {
-    Map<String, String> temp = {'username': username, 'password': password};
-
-    String accountInfoTicket = json.encode(temp);
-    try {
-      //We should encrypt this
-
-      var response = await http.post(validatorUrl, body: accountInfoTicket);
-
-      Map<String, bool> responseInfo = json.decode(response.body);
-
-      bool passwordCheck = responseInfo['passwordCheck']!;
-      bool usernameCheck = responseInfo['usernameCheck']!;
-
-      if (passwordCheck == false && usernameCheck == false) {
-        return 'invalid username and password';
-      }
-      if (usernameCheck == false) {
-        return 'Invalid username';
-      }
-      if (passwordCheck == false) {
-        return 'Invalid username';
-      }
-
-      _username = username;
-
-      return 'Login successful!';
-    } catch (e) {
-      return 'Unable to contact login server';
-    }
-  }
-}
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -148,19 +99,23 @@ class LoginFormState extends State<LoginForm> {
                     if (_formKey.currentState!.validate()) {
                       var url = Uri.http('google.com', '/bigpenisman');
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Attempting to log in...')),
-                      );
-
-                      var attemptResponse = await appState.accountInfo.update(
+                      var attemptResponse = await appState.attemptLogin(
                           usernameController.text,
                           passwordController.text,
                           url);
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(attemptResponse)),
-                      );
+                      setState(() {
+                        if (appState.isLoggedIn()) {
+                          Navigator.pop(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginForm()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(attemptResponse!)));
+                        }
+                      });
                     }
                   },
                   style: MyButtonStyles.buttonStyleLarge(context),

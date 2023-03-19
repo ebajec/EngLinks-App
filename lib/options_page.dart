@@ -51,7 +51,7 @@ class AccountPage extends StatelessWidget {
             alignment: Alignment.centerLeft,
           )
         else
-          Text('hello ${appState.accountInfo.retrieveName()}!'),
+          Text('hello ${appState.retrieveUsername()}!'),
       ],
     );
   }

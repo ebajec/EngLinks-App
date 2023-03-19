@@ -43,8 +43,6 @@ class MainDisplay extends StatefulWidget {
 }
 
 class _MainDisplayState extends State<MainDisplay> {
-  int _selectedIndex = 0;
-
   var pages = <Widget>[
     HomePage(),
     EventsPage(),
@@ -53,9 +51,18 @@ class _MainDisplayState extends State<MainDisplay> {
     OptionsPage(),
   ];
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
+
+    if (appState.loginNotifier) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      appState.loginNotifier = false;
+    }
 
     void onItemTapped(int index) {
       setState(() {
@@ -70,7 +77,7 @@ class _MainDisplayState extends State<MainDisplay> {
           style: MyTextStyles.appBarLarge(context),
         ),
         //Item in top left corner changes depending on login status
-        actions: [AccountButton(loginState: appState.isLoggedIn())],
+        actions: [AccountButton()],
         backgroundColor: Color.fromARGB(255, 240, 240, 240),
       ),
       body: SingleChildScrollView(
@@ -113,18 +120,15 @@ class _MainDisplayState extends State<MainDisplay> {
 
 class AccountButton extends StatelessWidget {
   const AccountButton({
-    required this.loginState,
     super.key,
   });
-
-  final bool loginState;
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
     List<Widget> elements = [];
-    if (!loginState) {
+    if (!appState.isLoggedIn()) {
       elements = [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -144,11 +148,17 @@ class AccountButton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(1)),
                 minimumSize: Size(100, 50),
               ),
-              child: Text('Log in', style: MyTextStyles.boldSmall(context))),
+              child: Text('Log in', style: MyTextStyles.bold(context, 20))),
         )
       ];
     } else {
-      elements = [Text('Logged in as ${appState.accountInfo.retrieveName()}')];
+      elements = [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Logged in as ${appState.retrieveUsername()}',
+              style: MyTextStyles.bold(context, 18)),
+        )
+      ];
     }
 
     return Row(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 /*
 * Global application state.  Only add stuff to this which will need to be shared
@@ -8,15 +10,51 @@ user settings.  Other information pertaining to the state of a particular page
 should be contained within the state of that page.
 */
 class AppState extends ChangeNotifier {
-  AccountInfo accountInfo = AccountInfo();
+  bool loginNotifier = false;
+
+  String? _username;
+
+  String? retrieveUsername() {
+    return _username;
+  }
 
   bool isLoggedIn() {
-    return accountInfo.retrieveName() != null;
+    return _username != null;
   }
-}
 
-List<double> SizeQuery(BuildContext context) {
-  double width = MediaQuery.of(context).size.width;
-  double height = MediaQuery.of(context).size.height;
-  return [width, height];
+  Future<String?> attemptLogin(
+      String username, String password, Uri validatorUrl) async {
+    Map<String, String> temp = {'username': username, 'password': password};
+
+    String accountInfoTicket = json.encode(temp);
+
+    String attemptMessage;
+
+    try {
+      //We should encrypt this
+      var response = await http.post(validatorUrl, body: accountInfoTicket);
+
+      Map<String, bool> responseInfo = json.decode(response.body);
+
+      bool passwordCheck = responseInfo['passwordCheck']!;
+      bool usernameCheck = responseInfo['usernameCheck']!;
+
+      if (passwordCheck == false && usernameCheck == false) {
+        return 'invalid username and password';
+      }
+      if (usernameCheck == false) {
+        return 'Invalid username';
+      }
+      if (passwordCheck == false) {
+        return 'Invalid username';
+      }
+
+      _username = username;
+
+      notifyListeners();
+      attemptMessage = 'Login successful!';
+    } catch (e) {
+      return 'Unable to contact login server';
+    }
+  }
 }

@@ -33,9 +33,9 @@ class MyTextStyles {
         color: Color.fromARGB(255, 65, 65, 65));
   }
 
-  static TextStyle boldSmall(BuildContext context) {
+  static TextStyle bold(BuildContext context, double size) {
     return TextStyle(
-        fontSize: 20,
+        fontSize: size,
         fontFamily: 'Helvetica',
         fontWeight: FontWeight.bold,
         color: Color.fromARGB(255, 65, 65, 65));
