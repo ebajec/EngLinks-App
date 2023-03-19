@@ -57,13 +57,6 @@ class _MainDisplayState extends State<MainDisplay> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    if (appState.loginNotifier) {
-      setState(() {
-        _selectedIndex = 0;
-      });
-      appState.loginNotifier = false;
-    }
-
     void onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;

@@ -28,13 +28,11 @@ class AppState extends ChangeNotifier {
 
     String accountInfoTicket = json.encode(temp);
 
-    String attemptMessage;
-
     try {
       //We should encrypt this
       var response = await http.post(validatorUrl, body: accountInfoTicket);
 
-      Map<String, bool> responseInfo = json.decode(response.body);
+      var responseInfo = json.decode(response.body);
 
       bool passwordCheck = responseInfo['passwordCheck']!;
       bool usernameCheck = responseInfo['usernameCheck']!;
@@ -52,7 +50,7 @@ class AppState extends ChangeNotifier {
       _username = username;
 
       notifyListeners();
-      attemptMessage = 'Login successful!';
+      return 'Login successful!';
     } catch (e) {
       return 'Unable to contact login server';
     }

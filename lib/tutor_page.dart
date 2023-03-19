@@ -21,14 +21,23 @@ class _TutorPageState extends State<TutorPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    return Column(
-      children: [
-        SizedBox(
-          height: 50,
-        ),
-        Text('Request a Tutor', style: MyTextStyles.titleMedium(context)),
-        Center(child: TutorForm(key: UniqueKey())),
-      ],
+    return Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Request a Tutor',
+                style: MyTextStyles.titleMedium(context)),
+          ),
+          if (appState.isLoggedIn())
+            TutorForm(key: UniqueKey())
+          else
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('You must be logged in to use this feature.'),
+            ),
+        ],
+      ),
     );
   }
 }
