@@ -55,4 +55,9 @@ class AppState extends ChangeNotifier {
       return 'Unable to contact login server';
     }
   }
+
+  void logout() {
+    _username = null;
+    notifyListeners();
+  }
 }

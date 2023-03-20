@@ -25,17 +25,24 @@ class _TutorPageState extends State<TutorPage> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Request a Tutor',
-                style: MyTextStyles.titleMedium(context)),
-          ),
-          if (appState.isLoggedIn())
-            TutorForm(key: UniqueKey())
-          else
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('You must be logged in to use this feature.'),
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                AlignedText(
+                  text: 'Request a Tutor',
+                  style: MyTextStyles.titleMedium(context),
+                  alignment: Alignment.centerLeft,
+                ),
+                AlignedBar(width: 270),
+                if (!appState.isLoggedIn())
+                  AlignedText(
+                      text:
+                          'Sorry, but you must be logged in to use this feature.',
+                      alignment: Alignment.centerLeft),
+              ],
             ),
+          ),
+          if (appState.isLoggedIn()) TutorForm(key: UniqueKey())
         ],
       ),
     );

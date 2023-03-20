@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'my_styles.dart';
 import 'misc_widgets.dart';
 import 'app_state.dart';
+import 'dart:math';
 
 /*This should mostly just be accessibility options and login settings. */
 class OptionsPage extends StatefulWidget {
@@ -17,16 +18,32 @@ class _OptionsPageState extends State<OptionsPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    return Column(
-      children: <Widget>[
-        AccountPage(loginState: appState.isLoggedIn()),
-        AccessibilityPage(),
-      ],
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          AlignedText(
+            text: 'Account',
+            alignment: Alignment.centerLeft,
+            style: MyTextStyles.titleMedium(context),
+          ),
+          AlignedBar(width: 300),
+          AccountPage(loginState: appState.isLoggedIn()),
+          AlignedText(
+              text: "Accessibility",
+              alignment: Alignment.centerLeft,
+              style: MyTextStyles.titleMedium(context)),
+          AlignedBar(width: 300),
+          AccessibilityPage(),
+        ],
+      ),
     );
   }
 }
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({
     required this.loginState,
     super.key,
@@ -35,25 +52,31 @@ class AccountPage extends StatelessWidget {
   final bool loginState;
 
   @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    return Column(
-      children: [
-        AlignedText(
-          text: 'Account',
-          alignment: Alignment.centerLeft,
-          style: MyTextStyles.titleMedium(context),
-        ),
-        if (!loginState)
-          AlignedText(
-            text: 'You are not logged in. Log in to view account details.',
-            alignment: Alignment.centerLeft,
-          )
-        else
-          Text('hello ${appState.retrieveUsername()}!'),
-      ],
-    );
+    if (!widget.loginState) {
+      return AlignedText(
+        text: 'You are not logged in. Log in to view account details.',
+        alignment: Alignment.centerLeft,
+      );
+    } else {
+      return Column(
+        children: [
+          SizedBox(height: 10),
+          OptionButton(
+              label: 'Log out',
+              onPressed: () {
+                appState.logout();
+              })
+        ],
+      );
+    }
   }
 }
 
@@ -65,9 +88,45 @@ class AccessibilityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlignedText(
-        text: "Accessibility Settings",
-        alignment: Alignment.centerLeft,
-        style: MyTextStyles.titleMedium(context));
+        text: 'Something will eventually be here.',
+        alignment: Alignment.centerLeft);
+  }
+}
+
+class OptionButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onPressed;
+
+  const OptionButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.grey),
+          bottom: BorderSide(color: Colors.grey),
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          child: Center(
+            child: AlignedText(
+              text: label,
+              style: MyTextStyles.bold(context, 18),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

@@ -23,3 +23,31 @@ class AlignedText extends StatelessWidget {
     );
   }
 }
+
+class AlignedBar extends StatelessWidget {
+  const AlignedBar({
+    super.key,
+    required this.width,
+  });
+
+  final double width;
+  final Alignment alignment = Alignment.centerLeft;
+  final Color color = Colors.black;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        width: width,
+        child: Divider(
+          color: color, //color of divider
+          height: 5, //height spacing of divider
+          thickness: 3, //thickness of divider line
+          indent: 5, //spacing at the start of divider
+          endIndent: 15, //spacing at the end of divider
+        ),
+      ),
+    );
+  }
+}

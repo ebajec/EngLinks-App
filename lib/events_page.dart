@@ -27,7 +27,6 @@ class CalendarSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle titleStyle = MyTextStyles.titleMedium(context);
     TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
     ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 
@@ -36,7 +35,8 @@ class CalendarSelectionScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(66),
-            child: Text('Event Calendars', style: titleStyle),
+            child: Text('Event Calendars',
+                style: MyTextStyles.titleMedium(context)),
           ),
           ElevatedButton(
               style: buttonStyle,
