@@ -64,6 +64,7 @@ class TutorFormState extends State<TutorForm> {
   final _formKey = GlobalKey<FormState>();
 
   Map<String, String> formData = {
+    'user': '',
     'name': '',
     'course': '',
     'freq': '',
@@ -124,6 +125,7 @@ class TutorFormState extends State<TutorForm> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
     double screenWidth = MediaQuery.of(context).size.width;
 
     TextStyle boldCaption = TextStyle(
@@ -135,6 +137,8 @@ class TutorFormState extends State<TutorForm> {
 
     _formKey.currentState?.activate();
     _formKey.currentState?.save();
+
+    formData['user'] = appState.retrieveUsername()!;
 
     return Form(
       key: _formKey,
@@ -162,12 +166,12 @@ class TutorFormState extends State<TutorForm> {
                         return 'This field is required.';
                       }
                       if (!validateName(value)) {
-                        return 'Invalid format!';
+                        return 'Separate first and last names with a comma.';
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Last, First',
+                      labelText: 'First, Last',
                       border: OutlineInputBorder(),
                     ),
                   ),
