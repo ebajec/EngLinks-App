@@ -25,6 +25,22 @@ class MyTextStyles {
         color: Color.fromARGB(255, 85, 56, 136));
   }
 
+  static TextStyle titleMedium(BuildContext context) {
+    return TextStyle(
+        fontSize: 28,
+        fontFamily: 'Helvetica',
+        fontWeight: FontWeight.bold,
+        color: Color.fromARGB(255, 65, 65, 65));
+  }
+
+  static TextStyle bold(BuildContext context, double size) {
+    return TextStyle(
+        fontSize: size,
+        fontFamily: 'Helvetica',
+        fontWeight: FontWeight.bold,
+        color: Color.fromARGB(255, 65, 65, 65));
+  }
+
   static TextStyle buttonLarge(BuildContext context) {
     return TextStyle(
       fontSize: 42,

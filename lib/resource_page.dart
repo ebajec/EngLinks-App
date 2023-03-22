@@ -4,22 +4,12 @@ import 'app_state.dart';
 import 'my_styles.dart';
 
 /*Learning resources stuff.  Should mostly be links. */
-class ResourcePage extends StatelessWidget{
+class ResourcePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-   return MaterialApp(
-    title : 'Resources Page',
-    theme : ThemeData(
 
-      primarySwatch : Colors.purple,
-    ),
-    home : ResourceData(),
-   );
-
-   
-    return GlobDisplay();
-     
+    return Placeholder();
   }
 }
 

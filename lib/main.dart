@@ -1,3 +1,4 @@
+import 'package:englinks_app/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -43,27 +44,19 @@ class MainDisplay extends StatefulWidget {
 }
 
 class _MainDisplayState extends State<MainDisplay> {
-  int _selectedIndex = 0;
-
   var pages = <Widget>[
     HomePage(),
     EventsPage(),
     TutorPage(),
     ResourcePage(),
-    OptionsPage()
+    OptionsPage(),
   ];
+
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-
-    Widget page;
-
-    try {
-      page = pages[_selectedIndex];
-    } catch (e) {
-      throw UnimplementedError('no widget for $_selectedIndex');
-    }
 
     void onItemTapped(int index) {
       setState(() {
@@ -77,9 +70,16 @@ class _MainDisplayState extends State<MainDisplay> {
           "EngLinks",
           style: MyTextStyles.appBarLarge(context),
         ),
+        //Item in top left corner changes depending on login status
+        actions: [AccountButton()],
         backgroundColor: Color.fromARGB(255, 240, 240, 240),
       ),
-      body: page,
+      body: SingleChildScrollView(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: pages,
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -108,6 +108,55 @@ class _MainDisplayState extends State<MainDisplay> {
         unselectedItemColor: Color.fromARGB(255, 150, 104, 170),
         onTap: onItemTapped,
       ),
+    );
+  }
+}
+
+class AccountButton extends StatelessWidget {
+  const AccountButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
+    List<Widget> elements = [];
+    if (!appState.isLoggedIn()) {
+      elements = [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginForm()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundColor: Color.fromARGB(255, 240, 240, 240),
+                shadowColor: Theme.of(context).colorScheme.outline,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1)),
+                minimumSize: Size(100, 50),
+              ),
+              child: Text('Log in', style: MyTextStyles.bold(context, 20))),
+        )
+      ];
+    } else {
+      elements = [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Logged in as ${appState.retrieveUsername()}',
+              style: MyTextStyles.bold(context, 18)),
+        )
+      ];
+    }
+
+    return Row(
+      children: elements,
     );
   }
 }
