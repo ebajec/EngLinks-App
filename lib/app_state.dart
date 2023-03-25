@@ -58,6 +58,7 @@ class AppState extends ChangeNotifier {
 
   void logout() {
     _username = null;
+    loginNotifier = true;
     notifyListeners();
   }
 }

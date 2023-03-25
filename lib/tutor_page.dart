@@ -74,7 +74,13 @@ class TutorFormState extends State<TutorForm> {
   String? _email;
 
   List<String> _courses = ['APSC 111', 'APSC 112'];
-  List<String> _tutorTimes = ['Weekly', 'Bi-weekly'];
+  List<String> _tutorTimes = [
+    'Just Once',
+    'Weekly',
+    'Bi-weekly',
+    'Monthly',
+    'Bi-Monthly'
+  ];
 
   String? _selectedCourse;
   String? _selectedTutorTime;
