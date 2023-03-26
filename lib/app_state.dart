@@ -28,6 +28,11 @@ class AppState extends ChangeNotifier {
 
     String accountInfoTicket = json.encode(temp);
 
+    _username = username;
+
+    notifyListeners();
+    return 'Forced login';
+
     try {
       //We should encrypt this
       var response = await http.post(validatorUrl, body: accountInfoTicket);
@@ -58,6 +63,7 @@ class AppState extends ChangeNotifier {
 
   void logout() {
     _username = null;
+    loginNotifier = true;
     notifyListeners();
   }
 }

@@ -53,14 +53,19 @@ class _MainDisplayState extends State<MainDisplay> {
 
   int _selectedIndex = 0;
 
+  void onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    void onItemTapped(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
+    if (appState.loginNotifier) {
+      _selectedIndex = 0;
+      appState.loginNotifier = false;
     }
 
     return Scaffold(
