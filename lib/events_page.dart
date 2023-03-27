@@ -1,18 +1,10 @@
-import 'dart:html';
-
-import 'dart:html';
-import 'dart:io';
-
-import 'dart:html';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'my_styles.dart';
-
+import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:basic_utils/basic_utils.dart';
+import 'event_info_handler.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -121,6 +113,8 @@ class _CalendarFirstYearState extends State<CalendarFirstYear> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -281,11 +275,4 @@ class _CalendarUpperYearState extends State<CalendarUpperYear> {
       ),
     );
   }
-}
-
-class Event {
-  final String title;
-  final Color color;
-
-  Event(this.title, this.color);
 }
