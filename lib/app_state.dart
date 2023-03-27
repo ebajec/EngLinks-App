@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'event_info_handler.dart';
 
 /*
 * Global application state.  Only add stuff to this which will need to be shared
@@ -11,8 +12,39 @@ should be contained within the state of that page.
 */
 class AppState extends ChangeNotifier {
   bool loginNotifier = false;
-
   String? _username;
+
+  Map<DateTime, List<Event>>? eventsFirstYear;
+  Map<DateTime, List<Event>>? eventsUpperYear;
+
+  Future<bool> retrieveEventData(String type) async {
+    String filename;
+
+    if (type == 'first year') {
+      filename = 'events_first_year.txt';
+    } else if (type == 'upper year') {
+      filename = 'events_upper_year.txt';
+    } else if (type == 'misc') {
+      filename = 'events_misc.txt';
+    } else {
+      return false;
+    }
+
+    var url = Uri.http('192.168.2.92:5000', 'event_data/$filename');
+    var response = await http.get(url);
+
+    var events = parseEventData(response.body);
+
+    if (type == 'first year') {
+      eventsFirstYear = events;
+      return true;
+    } else if (type == 'upper year') {
+      eventsUpperYear = events;
+      return true;
+    }
+
+    return false;
+  }
 
   String? retrieveUsername() {
     return _username;
