@@ -4,7 +4,36 @@ import 'app_state.dart';
 import 'my_styles.dart';
 import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
-import 'event_info_handler.dart';
+import 'event_data.dart';
+import 'misc_widgets.dart';
+
+Map<DateTime, List<Event>> eventsFirst = {
+  //to add event do DateTime.utc(year, month, day): [Event('name of event:  short description', Colors."any Colour")]
+  //if you want to add an event to an existing day, in the [] add a comma
+  DateTime.utc(2023, 4, 12): [
+    Event('APSC 174: Final WorkShop [1] \n 11:00 AM - 2:00 PM', Colors.yellow)
+  ],
+  DateTime.utc(2023, 4, 13): [
+    Event('APSC 174: Final WorkShop [2] \n 3:00 PM - 6:00 PM', Colors.yellow)
+  ],
+  DateTime.utc(2023, 4, 14): [
+    Event(
+        'APSC 112: Final WorkShop [1] \n 7:00 PM - 10:00 PM', Colors.lightBlue)
+  ],
+  DateTime.utc(2023, 4, 15): [
+    Event(
+        'APSC 112: Final WorkShop [2] \n 10:00 AM - 1:00 PM', Colors.lightBlue)
+  ],
+  DateTime.utc(2023, 4, 17): [
+    Event('APSC 132: Final WorkShop \n 3:00 PM - 6:00 PM', Colors.teal)
+  ],
+  DateTime.utc(2023, 4, 18): [
+    Event('APSC 162: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.purple)
+  ],
+  DateTime.utc(2023, 4, 22): [
+    Event('APSC 172: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.orange)
+  ],
+};
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -43,7 +72,11 @@ class CalendarSelectionScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CalendarFirstYear()),
+                  MaterialPageRoute(
+                      builder: (context) => EventCalendar(
+                            title: 'First year events',
+                            eventType: 'first year',
+                          )),
                 );
               },
               child: Text(
@@ -56,7 +89,11 @@ class CalendarSelectionScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CalendarUpperYear()),
+                  MaterialPageRoute(
+                      builder: (context) => EventCalendar(
+                            title: 'Upper year events',
+                            eventType: 'upper year',
+                          )),
                 );
               },
               child: Text(
@@ -69,56 +106,64 @@ class CalendarSelectionScreen extends StatelessWidget {
   }
 }
 
-class CalendarFirstYear extends StatefulWidget {
+class EventCalendar extends StatefulWidget {
+  final String eventType;
+  final String title;
+  EventCalendar({required this.eventType, required this.title});
+
   @override
-  _CalendarFirstYearState createState() => _CalendarFirstYearState();
+  _EventCalendarState createState() => _EventCalendarState();
 }
 
-class _CalendarFirstYearState extends State<CalendarFirstYear> {
+class _EventCalendarState extends State<EventCalendar> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  Map<DateTime, List<Event>> _events = {
-    //to add event do DateTime.utc(year, month, day): [Event('name of event:  short description', Colors."any Colour")]
-    //if you want to add an event to an existing day, in the [] add a comma
-    DateTime.utc(2023, 4, 12): [
-      Event('APSC 174: Final WorkShop [1] \n 11:00 AM - 2:00 PM', Colors.yellow)
-    ],
-    DateTime.utc(2023, 4, 13): [
-      Event('APSC 174: Final WorkShop [2] \n 3:00 PM - 6:00 PM', Colors.yellow)
-    ],
-    DateTime.utc(2023, 4, 14): [
-      Event('APSC 112: Final WorkShop [1] \n 7:00 PM - 10:00 PM',
-          Colors.lightBlue)
-    ],
-    DateTime.utc(2023, 4, 15): [
-      Event('APSC 112: Final WorkShop [2] \n 10:00 AM - 1:00 PM',
-          Colors.lightBlue)
-    ],
-    DateTime.utc(2023, 4, 17): [
-      Event('APSC 132: Final WorkShop \n 3:00 PM - 6:00 PM', Colors.teal)
-    ],
-    DateTime.utc(2023, 4, 18): [
-      Event('APSC 162: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.purple)
-    ],
-    DateTime.utc(2023, 4, 22): [
-      Event('APSC 172: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.orange)
-    ],
-  };
+  Map<DateTime, List<Event>>? _events;
 
   List<Event> _getEventsForDay(DateTime day) {
-    return _events[day] ?? [];
+    return _events![day] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
+    _events = appState.events[widget.eventType];
+
+    if (_events!.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.title,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        body: Column(
+          children: [
+            AlignedText(
+              text: 'Failed to load event data. Retry?',
+              style: MyTextStyles.titleMedium(context),
+              alignment: Alignment.center,
+            ),
+            Center(
+              child: IconButton(
+                icon: Icon(Icons.replay),
+                onPressed: () async {
+                  appState.retrieveEventData(widget.eventType, server);
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'First Year events',
+          widget.title,
         ),
       ),
       body: Column(
@@ -177,6 +222,7 @@ class _CalendarFirstYearState extends State<CalendarFirstYear> {
   }
 }
 
+/*
 class CalendarUpperYear extends StatefulWidget {
   @override
   _CalendarUpperYearState createState() => _CalendarUpperYearState();
@@ -214,6 +260,31 @@ class _CalendarUpperYearState extends State<CalendarUpperYear> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+    if (appState.events['upper year'] == null) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Upper Year events',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          body: Column(
+            children: [
+              Text(
+                'Failed to load calendar data :(',
+                style: MyTextStyles.bold(context, 20),
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    appState.retrieveEventData('first_year', server);
+                  },
+                  child: Text('Retry'))
+            ],
+          ));
+    }
+    _events = appState.events['upper year']!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -276,3 +347,4 @@ class _CalendarUpperYearState extends State<CalendarUpperYear> {
     );
   }
 }
+*/

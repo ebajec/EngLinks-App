@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'event_info_handler.dart';
+import 'event_data.dart';
+
+const String server = '10.216.168.158:5000';
 
 /*
 * Global application state.  Only add stuff to this which will need to be shared
@@ -14,10 +16,18 @@ class AppState extends ChangeNotifier {
   bool loginNotifier = false;
   String? _username;
 
-  Map<DateTime, List<Event>>? eventsFirstYear;
-  Map<DateTime, List<Event>>? eventsUpperYear;
+  Map<String, Map<DateTime, List<Event>>> events = {
+    'first year': {},
+    'upper year': {},
+    'misc': {}
+  };
 
-  Future<bool> retrieveEventData(String type) async {
+  AppState() {
+    retrieveEventData('first year', server);
+    retrieveEventData('upper year', server);
+  }
+
+  Future<bool> retrieveEventData(String type, String serverURL) async {
     String filename;
 
     if (type == 'first year') {
@@ -30,20 +40,20 @@ class AppState extends ChangeNotifier {
       return false;
     }
 
-    var url = Uri.http('192.168.2.92:5000', 'event_data/$filename');
-    var response = await http.get(url);
+    var url = Uri.http(serverURL, 'event_data/$filename');
+    var response;
 
-    var events = parseEventData(response.body);
-
-    if (type == 'first year') {
-      eventsFirstYear = events;
-      return true;
-    } else if (type == 'upper year') {
-      eventsUpperYear = events;
-      return true;
+    try {
+      response = await http.get(url);
+    } catch (e) {
+      return false;
     }
 
-    return false;
+    var eventData = parseEventData(response.body);
+
+    events[type] = eventData;
+    notifyListeners();
+    return true;
   }
 
   String? retrieveUsername() {

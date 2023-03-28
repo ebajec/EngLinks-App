@@ -28,13 +28,11 @@ Map<DateTime, List<Event>> parseEventData(String data) {
 
   Map<DateTime, List<Event>> events = {};
 
-  for (String eventDataJSON in tempData) {
-    Map<String, String> eventData = json.decode(eventDataJSON);
-
+  for (var eventData in tempData) {
     var date = DateTime.utc(eventData['year'] as int,
         months[eventData['month']?.toUpperCase()]!, eventData['date'] as int);
 
-    String title = eventData['title']!;
+    String title = eventData['title']! + '\n' + eventData['time'];
     Color color;
 
     //workshops are blue just because
