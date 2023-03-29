@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'my_styles.dart';
@@ -30,14 +29,14 @@ class _OptionsPageState extends State<OptionsPage> {
             alignment: Alignment.centerLeft,
             style: MyTextStyles.titleMedium(context),
           ),
-          AlignedBar(width: 300),
+          AlignedBar(width: 270),
           AccountPage(loginState: appState.isLoggedIn()),
           AlignedText(
-              text: "Accessibility",
+              text: "Debug Options",
               alignment: Alignment.centerLeft,
               style: MyTextStyles.titleMedium(context)),
-          AlignedBar(width: 300),
-          AccessibilityPage(),
+          AlignedBar(width: 270),
+          DebugPage(),
         ],
       ),
     );
@@ -81,16 +80,54 @@ class _AccountPageState extends State<AccountPage> {
   }
 }
 
-class AccessibilityPage extends StatelessWidget {
-  const AccessibilityPage({
+class DebugPage extends StatefulWidget {
+  const DebugPage({
     super.key,
   });
 
   @override
+  State<DebugPage> createState() => _DebugPageState();
+}
+
+class _DebugPageState extends State<DebugPage> {
+  String? _serverUrl;
+
+  @override
   Widget build(BuildContext context) {
-    return AlignedText(
-        text: 'Something will eventually be here.',
-        alignment: Alignment.centerLeft);
+    var appState = context.watch<AppState>();
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          AlignedText(
+            alignment: Alignment.centerLeft,
+            text: 'Edit server url (current: ${appState.serverURL})',
+            style: MyTextStyles.bold(context, 16),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 400,
+              child: TextField(
+                onChanged: (value) {
+                  _serverUrl = value;
+                },
+                onEditingComplete: () {
+                  if (_serverUrl != null && _serverUrl != '') {
+                    appState.setServerURL(_serverUrl!);
+                  }
+                },
+                decoration: InputDecoration(
+                  labelText: 'Example: "localhost"',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

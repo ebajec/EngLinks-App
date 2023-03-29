@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'event_data.dart';
 
-const String server = '10.216.168.158:5000';
-
 /*
 * Global application state.  Only add stuff to this which will need to be shared
 between all parts of the app.  This will mostly be stuff like login info and
@@ -13,6 +11,8 @@ user settings.  Other information pertaining to the state of a particular page
 should be contained within the state of that page.
 */
 class AppState extends ChangeNotifier {
+  String serverURL = 'localhost';
+
   bool loginNotifier = false;
   String? _username;
 
@@ -23,11 +23,16 @@ class AppState extends ChangeNotifier {
   };
 
   AppState() {
-    retrieveEventData('first year', server);
-    retrieveEventData('upper year', server);
+    retrieveEventData('first year');
+    retrieveEventData('upper year');
   }
 
-  Future<bool> retrieveEventData(String type, String serverURL) async {
+  void setServerURL(String url) {
+    serverURL = url;
+    notifyListeners();
+  }
+
+  Future<bool> retrieveEventData(String type) async {
     String filename;
 
     if (type == 'first year') {

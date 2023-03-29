@@ -1,4 +1,3 @@
-
 import 'package:englinks_app/my_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -287,7 +286,7 @@ class TutorFormState extends State<TutorForm> {
                   String formDataJSON = json.encode(formData);
 
                   var url =
-                      Uri.http('192.168.2.92:5000', 'recieve_tutor_request');
+                      Uri.http(appState.serverURL, 'recieve_tutor_request');
 
                   var response =
                       await postTutorRequest(url, formDataJSON, context);

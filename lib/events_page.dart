@@ -7,34 +7,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'event_data.dart';
 import 'misc_widgets.dart';
 
-Map<DateTime, List<Event>> eventsFirst = {
-  //to add event do DateTime.utc(year, month, day): [Event('name of event:  short description', Colors."any Colour")]
-  //if you want to add an event to an existing day, in the [] add a comma
-  DateTime.utc(2023, 4, 12): [
-    Event('APSC 174: Final WorkShop [1] \n 11:00 AM - 2:00 PM', Colors.yellow)
-  ],
-  DateTime.utc(2023, 4, 13): [
-    Event('APSC 174: Final WorkShop [2] \n 3:00 PM - 6:00 PM', Colors.yellow)
-  ],
-  DateTime.utc(2023, 4, 14): [
-    Event(
-        'APSC 112: Final WorkShop [1] \n 7:00 PM - 10:00 PM', Colors.lightBlue)
-  ],
-  DateTime.utc(2023, 4, 15): [
-    Event(
-        'APSC 112: Final WorkShop [2] \n 10:00 AM - 1:00 PM', Colors.lightBlue)
-  ],
-  DateTime.utc(2023, 4, 17): [
-    Event('APSC 132: Final WorkShop \n 3:00 PM - 6:00 PM', Colors.teal)
-  ],
-  DateTime.utc(2023, 4, 18): [
-    Event('APSC 162: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.purple)
-  ],
-  DateTime.utc(2023, 4, 22): [
-    Event('APSC 172: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.orange)
-  ],
-};
-
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
 
@@ -59,6 +31,8 @@ class CalendarSelectionScreen extends StatelessWidget {
     TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
     ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 
+    var appState = context.watch<AppState>();
+
     return Center(
       child: Column(
         children: [
@@ -70,6 +44,7 @@ class CalendarSelectionScreen extends StatelessWidget {
           ElevatedButton(
               style: buttonStyle,
               onPressed: () {
+                appState.retrieveEventData('first year');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -87,6 +62,8 @@ class CalendarSelectionScreen extends StatelessWidget {
           ElevatedButton(
               style: buttonStyle,
               onPressed: () {
+                appState.retrieveEventData('upper year');
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -151,7 +128,7 @@ class _EventCalendarState extends State<EventCalendar> {
               child: IconButton(
                 icon: Icon(Icons.replay),
                 onPressed: () async {
-                  appState.retrieveEventData(widget.eventType, server);
+                  appState.retrieveEventData(widget.eventType);
                 },
               ),
             ),
@@ -348,3 +325,33 @@ class _CalendarUpperYearState extends State<CalendarUpperYear> {
   }
 }
 */
+
+/**
+ * Map<DateTime, List<Event>> eventsFirst = {
+  //to add event do DateTime.utc(year, month, day): [Event('name of event:  short description', Colors."any Colour")]
+  //if you want to add an event to an existing day, in the [] add a comma
+  DateTime.utc(2023, 4, 12): [
+    Event('APSC 174: Final WorkShop [1] \n 11:00 AM - 2:00 PM', Colors.yellow)
+  ],
+  DateTime.utc(2023, 4, 13): [
+    Event('APSC 174: Final WorkShop [2] \n 3:00 PM - 6:00 PM', Colors.yellow)
+  ],
+  DateTime.utc(2023, 4, 14): [
+    Event(
+        'APSC 112: Final WorkShop [1] \n 7:00 PM - 10:00 PM', Colors.lightBlue)
+  ],
+  DateTime.utc(2023, 4, 15): [
+    Event(
+        'APSC 112: Final WorkShop [2] \n 10:00 AM - 1:00 PM', Colors.lightBlue)
+  ],
+  DateTime.utc(2023, 4, 17): [
+    Event('APSC 132: Final WorkShop \n 3:00 PM - 6:00 PM', Colors.teal)
+  ],
+  DateTime.utc(2023, 4, 18): [
+    Event('APSC 162: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.purple)
+  ],
+  DateTime.utc(2023, 4, 22): [
+    Event('APSC 172: Final WorkShop \n 10:00 AM - 1:00 PM', Colors.orange)
+  ],
+};
+ */
