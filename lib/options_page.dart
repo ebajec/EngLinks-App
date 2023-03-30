@@ -27,14 +27,14 @@ class _OptionsPageState extends State<OptionsPage> {
           AlignedText(
             text: 'Account',
             alignment: Alignment.centerLeft,
-            style: MyTextStyles.titleMedium(context),
+            style: MyTextStyles.bold(context, 20),
           ),
           AlignedBar(width: 270),
           AccountPage(loginState: appState.isLoggedIn()),
           AlignedText(
               text: "Debug Options",
               alignment: Alignment.centerLeft,
-              style: MyTextStyles.titleMedium(context)),
+              style: MyTextStyles.bold(context, 20)),
           AlignedBar(width: 270),
           DebugPage(),
         ],
