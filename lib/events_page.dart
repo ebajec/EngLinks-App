@@ -129,8 +129,8 @@ class _EventCalendarState extends State<EventCalendar> {
             Container(
               height: 200,
               width: 160,
-              child: Image.file(File("assets/broken_chain_icon.png"),
-                  fit: BoxFit.contain),
+              child: MyImage(
+                  assetImage: AssetImage("assets/broken_chain_icon.png")),
             ),
             AlignedText(
               text: 'Failed to load event data. \nRetry?',

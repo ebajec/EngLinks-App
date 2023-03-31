@@ -96,6 +96,8 @@ class _DebugPageState extends State<DebugPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
+    var textFocusNode = FocusNode();
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -110,6 +112,7 @@ class _DebugPageState extends State<DebugPage> {
             child: SizedBox(
               width: 400,
               child: TextField(
+                focusNode: textFocusNode,
                 onChanged: (value) {
                   _serverUrl = value;
                 },

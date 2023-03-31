@@ -51,8 +51,8 @@ class _TutorPageState extends State<TutorPage> {
           SizedBox(height: 10),
           WideButton(
             label: 'Request a tutor',
-            height: 50,
-            textStyle: MyTextStyles.bold(context, 18),
+            height: 120,
+            textStyle: MyTextStyles.bold(context, 34),
             onPressed: () {
               if (appState.isLoggedIn()) {
                 Navigator.push(
