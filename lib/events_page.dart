@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
 import 'event_data.dart';
 import 'misc_widgets.dart';
+import 'dart:io';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -28,7 +29,7 @@ class CalendarSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
+    TextStyle buttonTextStyle = MyTextStyles.bold(context, 32);
     ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 
     var appState = context.watch<AppState>();
@@ -36,47 +37,52 @@ class CalendarSelectionScreen extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(66),
-            child: Text('Event Calendars',
-                style: MyTextStyles.titleMedium(context)),
+          SizedBox(
+            height: buttonSpacing / 2,
           ),
-          ElevatedButton(
-              style: buttonStyle,
-              onPressed: () {
-                appState.retrieveEventData('first year');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EventCalendar(
-                            title: 'First year events',
-                            eventType: 'first year',
-                          )),
-                );
-              },
-              child: Text(
-                'First Year',
-                style: buttonTextStyle,
-              )),
+          AlignedText(
+            text: 'Event Calendars',
+            style: MyTextStyles.titleMedium(context),
+            alignment: Alignment.centerLeft,
+          ),
+          AlignedBar(width: 270),
+          SizedBox(
+            height: buttonSpacing,
+          ),
+          WideButton(
+            textStyle: MyTextStyles.bold(context, 34),
+            height: 120,
+            onPressed: () {
+              appState.retrieveEventData('first year');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EventCalendar(
+                          title: 'First year events',
+                          eventType: 'first year',
+                        )),
+              );
+            },
+            label: 'First Year',
+          ),
           SizedBox(height: buttonSpacing),
-          ElevatedButton(
-              style: buttonStyle,
-              onPressed: () {
-                appState.retrieveEventData('upper year');
+          WideButton(
+            textStyle: MyTextStyles.bold(context, 34),
+            height: 120,
+            onPressed: () {
+              appState.retrieveEventData('upper year');
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EventCalendar(
-                            title: 'Upper year events',
-                            eventType: 'upper year',
-                          )),
-                );
-              },
-              child: Text(
-                'Upper Year',
-                style: buttonTextStyle,
-              ))
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EventCalendar(
+                          title: 'Upper year events',
+                          eventType: 'upper year',
+                        )),
+              );
+            },
+            label: 'Upper Year',
+          )
         ],
       ),
     );
@@ -118,14 +124,23 @@ class _EventCalendarState extends State<EventCalendar> {
           ),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Container(
+              height: 200,
+              width: 160,
+              child: Image.file(File("assets/broken_chain_icon.png"),
+                  fit: BoxFit.contain),
+            ),
             AlignedText(
-              text: 'Failed to load event data. Retry?',
-              style: MyTextStyles.titleMedium(context),
+              text: 'Failed to load event data. \nRetry?',
+              style: MyTextStyles.bold(context, 18),
               alignment: Alignment.center,
+              textAlign: TextAlign.center,
             ),
             Center(
               child: IconButton(
+                iconSize: 50,
                 icon: Icon(Icons.replay),
                 onPressed: () async {
                   appState.retrieveEventData(widget.eventType);

@@ -201,7 +201,7 @@ class TutorFormState extends State<TutorForm> {
                       return null;
                     },
                     decoration: InputDecoration(
-                      labelText: 'NetID@queensu.ca',
+                      labelText: 'example@queensu.ca',
                       border: OutlineInputBorder(),
                     ),
                   ),

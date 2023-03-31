@@ -27,14 +27,14 @@ class _OptionsPageState extends State<OptionsPage> {
           AlignedText(
             text: 'Account',
             alignment: Alignment.centerLeft,
-            style: MyTextStyles.titleMedium(context),
+            style: MyTextStyles.bold(context, 20),
           ),
           AlignedBar(width: 270),
           AccountPage(loginState: appState.isLoggedIn()),
           AlignedText(
               text: "Debug Options",
               alignment: Alignment.centerLeft,
-              style: MyTextStyles.titleMedium(context)),
+              style: MyTextStyles.bold(context, 20)),
           AlignedBar(width: 270),
           DebugPage(),
         ],
@@ -69,7 +69,9 @@ class _AccountPageState extends State<AccountPage> {
       return Column(
         children: [
           SizedBox(height: 10),
-          OptionButton(
+          WideButton(
+              textStyle: MyTextStyles.bold(context, 16),
+              textAlign: Alignment.centerLeft,
               label: 'Log out',
               onPressed: () {
                 appState.logout();
@@ -131,42 +133,7 @@ class _DebugPageState extends State<DebugPage> {
   }
 }
 
-class OptionButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
 
-  const OptionButton({
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.grey),
-          bottom: BorderSide(color: Colors.grey),
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          child: Center(
-            child: AlignedText(
-              text: label,
-              style: MyTextStyles.bold(context, 18),
-              alignment: Alignment.centerLeft,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 // Possibly useful unused code snippets VVV
 

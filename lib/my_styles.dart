@@ -6,23 +6,26 @@ of consistency.*/
 class MyButtonStyles {
   static ButtonStyle buttonStyleLarge(BuildContext context) {
     return ElevatedButton.styleFrom(
-      primary: Theme.of(context).colorScheme.secondary,
-      onPrimary: Colors.white,
-      shadowColor: Theme.of(context).colorScheme.outline,
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
-      minimumSize: Size(360, 120),
-    );
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+          side: BorderSide(
+            color: Colors.black,
+            width: 2.0, // adjust border width as needed
+          ),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        minimumSize: Size(300, 120));
   }
 }
 
 class MyTextStyles {
   static TextStyle titleLarge(BuildContext context) {
     return TextStyle(
-        fontSize: 50,
+        fontSize: 46,
         fontFamily: 'Helvetica',
         fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 85, 56, 136));
+        color: Colors.purple);
   }
 
   static TextStyle titleMedium(BuildContext context) {
@@ -30,7 +33,7 @@ class MyTextStyles {
         fontSize: 28,
         fontFamily: 'Helvetica',
         fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 65, 65, 65));
+        color: Color.fromARGB(255, 45, 45, 45));
   }
 
   static TextStyle bold(BuildContext context, double size) {
@@ -38,14 +41,14 @@ class MyTextStyles {
         fontSize: size,
         fontFamily: 'Helvetica',
         fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 65, 65, 65));
+        color: Color.fromARGB(255, 45, 45, 45));
   }
 
   static TextStyle buttonLarge(BuildContext context) {
     return TextStyle(
-      fontSize: 42,
-      fontFamily: 'Helvetica',
-    );
+        fontSize: 42,
+        fontFamily: 'Helvetica',
+        color: Color.fromARGB(255, 45, 45, 45));
   }
 
   static TextStyle appBarLarge(BuildContext context) {
