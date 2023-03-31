@@ -10,6 +10,7 @@
 .svn/
 migrate_working_dir/
 mod_3_project_workspace.code-workspace
+pubspec.lock
 
 # IntelliJ related
 *.iml
