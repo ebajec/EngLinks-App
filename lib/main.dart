@@ -9,6 +9,8 @@ import 'resource_page.dart';
 import 'options_page.dart';
 import 'my_styles.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 String serverUrl = '192.168.2.92:5000';
 
@@ -73,10 +75,11 @@ class _MainDisplayState extends State<MainDisplay> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "EngLinks",
-          style: MyTextStyles.appBarLarge(context),
-        ),
+        title: SizedBox(
+            width: 65,
+            height: 65,
+            child: Image.file(File("assets/englinks_icon.png"),
+                fit: BoxFit.contain)),
         //Item in top left corner changes depending on login status
         actions: [AccountButton()],
         backgroundColor: Color.fromARGB(255, 240, 240, 240),
