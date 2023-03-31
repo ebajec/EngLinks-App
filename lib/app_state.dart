@@ -77,11 +77,7 @@ class AppState extends ChangeNotifier {
 
     _username = username;
 
-    notifyListeners();
-    return 'Forced login';
-
     try {
-      //We should encrypt this
       var response = await http.post(validatorUrl, body: accountInfoTicket);
 
       var responseInfo = json.decode(response.body);
