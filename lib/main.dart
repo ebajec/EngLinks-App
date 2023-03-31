@@ -75,6 +75,7 @@ class _MainDisplayState extends State<MainDisplay> {
 
     return Scaffold(
       appBar: AppBar(
+        shadowColor: Colors.grey,
         title: SizedBox(
             width: 65,
             height: 65,
@@ -82,7 +83,8 @@ class _MainDisplayState extends State<MainDisplay> {
                 fit: BoxFit.contain)),
         //Item in top left corner changes depending on login status
         actions: [AccountButton()],
-        backgroundColor: Color.fromARGB(255, 240, 240, 240),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: IndexedStack(

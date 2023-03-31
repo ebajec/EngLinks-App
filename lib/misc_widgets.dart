@@ -5,13 +5,15 @@ class AlignedText extends StatelessWidget {
   final String text;
   final AlignmentGeometry alignment;
   final TextStyle style;
+  final TextAlign textAlign;
 
-  const AlignedText({
-    Key? key,
-    required this.text,
-    required this.alignment,
-    this.style = const TextStyle(),
-  }) : super(key: key);
+  const AlignedText(
+      {Key? key,
+      required this.text,
+      required this.alignment,
+      this.style = const TextStyle(),
+      this.textAlign = TextAlign.left})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,11 @@ class AlignedText extends StatelessWidget {
       alignment: alignment,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text(text, style: style),
+        child: Text(
+          text,
+          style: style,
+          textAlign: textAlign,
+        ),
       ),
     );
   }

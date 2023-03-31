@@ -33,7 +33,7 @@ class MyTextStyles {
         fontSize: 28,
         fontFamily: 'Helvetica',
         fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 65, 65, 65));
+        color: Color.fromARGB(255, 45, 45, 45));
   }
 
   static TextStyle bold(BuildContext context, double size) {
@@ -41,14 +41,14 @@ class MyTextStyles {
         fontSize: size,
         fontFamily: 'Helvetica',
         fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 65, 65, 65));
+        color: Color.fromARGB(255, 45, 45, 45));
   }
 
   static TextStyle buttonLarge(BuildContext context) {
     return TextStyle(
         fontSize: 42,
         fontFamily: 'Helvetica',
-        color: Color.fromARGB(255, 65, 65, 65));
+        color: Color.fromARGB(255, 45, 45, 45));
   }
 
   static TextStyle appBarLarge(BuildContext context) {
