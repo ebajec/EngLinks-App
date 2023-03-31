@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
 import 'event_data.dart';
 import 'misc_widgets.dart';
+import 'dart:io';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -37,11 +38,16 @@ class CalendarSelectionScreen extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 40,
+            height: buttonSpacing / 2,
           ),
-          Text('Event Calendars', style: MyTextStyles.titleLarge(context)),
+          AlignedText(
+            text: 'Event Calendars',
+            style: MyTextStyles.titleMedium(context),
+            alignment: Alignment.centerLeft,
+          ),
+          AlignedBar(width: 270),
           SizedBox(
-            height: 40,
+            height: buttonSpacing,
           ),
           WideButton(
             textStyle: MyTextStyles.bold(context, 34),
@@ -118,14 +124,23 @@ class _EventCalendarState extends State<EventCalendar> {
           ),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Container(
+              height: 200,
+              width: 160,
+              child: Image.file(File("assets/broken_chain_icon.png"),
+                  fit: BoxFit.contain),
+            ),
             AlignedText(
-              text: 'Failed to load event data. Retry?',
-              style: MyTextStyles.titleMedium(context),
+              text: 'Failed to load event data. \nRetry?',
+              style: MyTextStyles.bold(context, 18),
               alignment: Alignment.center,
+              textAlign: TextAlign.center,
             ),
             Center(
               child: IconButton(
+                iconSize: 50,
                 icon: Icon(Icons.replay),
                 onPressed: () async {
                   appState.retrieveEventData(widget.eventType);
