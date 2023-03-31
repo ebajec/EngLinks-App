@@ -159,7 +159,7 @@ class AccountButton extends StatelessWidget {
       elements = [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text('Hello ${appState.retrieveUsername()}!',
+          child: Text('Hello, ${appState.retrieveUsername()}!',
               style: MyTextStyles.bold(context, 18)),
         )
       ];
