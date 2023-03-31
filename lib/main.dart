@@ -1,4 +1,5 @@
 import 'package:englinks_app/login.dart';
+import 'package:englinks_app/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -9,7 +10,6 @@ import 'resource_page.dart';
 import 'options_page.dart';
 import 'my_styles.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 void main() {
@@ -75,10 +75,10 @@ class _MainDisplayState extends State<MainDisplay> {
       appBar: AppBar(
         shadowColor: Colors.grey,
         title: SizedBox(
-            width: 65,
-            height: 65,
-            child: Image.file(File("assets/englinks_icon.png"),
-                fit: BoxFit.contain)),
+          width: 65,
+          height: 65,
+          child: MyImage(assetImage: AssetImage("assets/englinks_icon.png")),
+        ),
         //Item in top left corner changes depending on login status
         actions: [AccountButton()],
         backgroundColor: Colors.white,
