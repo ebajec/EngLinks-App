@@ -5,7 +5,7 @@ import 'my_styles.dart';
 import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
 import 'event_data.dart';
-import 'misc_widgets.dart';
+import 'my_widgets.dart';
 import 'dart:io';
 
 class EventsPage extends StatefulWidget {
@@ -45,7 +45,7 @@ class CalendarSelectionScreen extends StatelessWidget {
             style: MyTextStyles.titleMedium(context),
             alignment: Alignment.centerLeft,
           ),
-          AlignedBar(width: 270),
+          AlignedBar(width: accentBarWidth, color: accentBarColor),
           SizedBox(
             height: buttonSpacing,
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'my_styles.dart';
-import 'misc_widgets.dart';
+import 'my_widgets.dart';
 import 'app_state.dart';
 import 'dart:math';
 
@@ -20,25 +20,23 @@ class _OptionsPageState extends State<OptionsPage> {
 
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          AlignedText(
-            text: 'Account',
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 15),
+        AlignedText(
+          text: 'Account',
+          alignment: Alignment.centerLeft,
+          style: MyTextStyles.titleMedium(context),
+        ),
+        AlignedBar(width: accentBarWidth, color: accentBarColor),
+        AccountPage(loginState: appState.isLoggedIn()),
+        AlignedText(
+            text: "Debug Options",
             alignment: Alignment.centerLeft,
-            style: MyTextStyles.bold(context, 20),
-          ),
-          AlignedBar(width: 270),
-          AccountPage(loginState: appState.isLoggedIn()),
-          AlignedText(
-              text: "Debug Options",
-              alignment: Alignment.centerLeft,
-              style: MyTextStyles.bold(context, 20)),
-          AlignedBar(width: 270),
-          DebugPage(),
-        ],
-      ),
+            style: MyTextStyles.titleMedium(context)),
+        AlignedBar(width: accentBarWidth, color: accentBarColor),
+        DebugPage(),
+      ],
     );
   }
 }
@@ -70,7 +68,7 @@ class _AccountPageState extends State<AccountPage> {
         children: [
           SizedBox(height: 10),
           WideButton(
-              textStyle: MyTextStyles.bold(context, 16),
+              textStyle: MyTextStyles.bold(context, 18),
               textAlign: Alignment.centerLeft,
               label: 'Log out',
               onPressed: () {
