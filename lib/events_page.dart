@@ -28,7 +28,7 @@ class CalendarSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
+    TextStyle buttonTextStyle = MyTextStyles.bold(context, 32);
     ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
 
     var appState = context.watch<AppState>();
@@ -36,47 +36,47 @@ class CalendarSelectionScreen extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(66),
-            child: Text('Event Calendars',
-                style: MyTextStyles.titleMedium(context)),
+          SizedBox(
+            height: 40,
           ),
-          ElevatedButton(
-              style: buttonStyle,
-              onPressed: () {
-                appState.retrieveEventData('first year');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EventCalendar(
-                            title: 'First year events',
-                            eventType: 'first year',
-                          )),
-                );
-              },
-              child: Text(
-                'First Year',
-                style: buttonTextStyle,
-              )),
+          Text('Event Calendars', style: MyTextStyles.titleLarge(context)),
+          SizedBox(
+            height: 40,
+          ),
+          WideButton(
+            textStyle: MyTextStyles.bold(context, 34),
+            height: 120,
+            onPressed: () {
+              appState.retrieveEventData('first year');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EventCalendar(
+                          title: 'First year events',
+                          eventType: 'first year',
+                        )),
+              );
+            },
+            label: 'First Year',
+          ),
           SizedBox(height: buttonSpacing),
-          ElevatedButton(
-              style: buttonStyle,
-              onPressed: () {
-                appState.retrieveEventData('upper year');
+          WideButton(
+            textStyle: MyTextStyles.bold(context, 34),
+            height: 120,
+            onPressed: () {
+              appState.retrieveEventData('upper year');
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EventCalendar(
-                            title: 'Upper year events',
-                            eventType: 'upper year',
-                          )),
-                );
-              },
-              child: Text(
-                'Upper Year',
-                style: buttonTextStyle,
-              ))
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EventCalendar(
+                          title: 'Upper year events',
+                          eventType: 'upper year',
+                        )),
+              );
+            },
+            label: 'Upper Year',
+          )
         ],
       ),
     );

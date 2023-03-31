@@ -119,7 +119,7 @@ class LoginFormState extends State<LoginForm> {
                     }
                   },
                   style: MyButtonStyles.buttonStyleLarge(context),
-                  child: const Text('Login'),
+                  child: Text('Login', style: MyTextStyles.bold(context, 14)),
                 ),
               ),
             ),
