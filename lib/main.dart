@@ -12,8 +12,6 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-String serverUrl = '192.168.2.92:5000';
-
 void main() {
   runApp(MyApp());
 }
