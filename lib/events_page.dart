@@ -1,57 +1,38 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'app_state.dart';
-import 'my_styles.dart';
 import 'dart:convert';
-import 'package:table_calendar/table_calendar.dart';
-import 'event_data.dart';
-import 'my_widgets.dart';
 import 'dart:io';
 
-class EventsPage extends StatefulWidget {
-  const EventsPage({super.key});
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-  @override
-  State<EventsPage> createState() => _EventsPageState();
-}
-
-class _EventsPageState extends State<EventsPage> {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-
-    return CalendarSelectionScreen();
-  }
-}
+import 'app_state.dart';
+import 'event_data.dart';
+import 'my_styles.dart';
+import 'my_widgets.dart';
 
 class CalendarSelectionScreen extends StatelessWidget {
-  final double buttonSpacing = 30;
+  final double buttonWidth = 300;
 
   @override
   Widget build(BuildContext context) {
-    TextStyle buttonTextStyle = MyTextStyles.bold(context, 32);
-    ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
+    TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
+    ButtonStyle buttonStyle = MyButtonStyles.rectButton(
+        context, 32, buttonWidth, Theme.of(context).colorScheme.primary);
 
     var appState = context.watch<AppState>();
+
+    Widget calendarIcon = Icon(
+      Icons.calendar_month,
+      color: Colors.white,
+    );
 
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            height: buttonSpacing / 2,
-          ),
-          AlignedText(
-            text: 'Event Calendars',
-            style: MyTextStyles.titleMedium(context),
-            alignment: Alignment.centerLeft,
-          ),
-          AlignedBar(width: accentBarWidth, color: accentBarColor),
-          SizedBox(
-            height: buttonSpacing,
-          ),
-          WideButton(
-            textStyle: MyTextStyles.bold(context, 34),
-            height: 120,
+          SizedBox(height: 20),
+          FeatureTitle('Event Calendars', textSize: 26, spacing: 40),
+          ElevatedButton(
+            style: buttonStyle,
             onPressed: () {
               appState.retrieveEventData('first year');
               Navigator.push(
@@ -63,15 +44,18 @@ class CalendarSelectionScreen extends StatelessWidget {
                         )),
               );
             },
-            label: 'First Year',
+            child: IconTextLabel(
+              'First year',
+              width: buttonWidth,
+              style: buttonTextStyle,
+              icon: calendarIcon,
+            ),
           ),
-          SizedBox(height: buttonSpacing),
-          WideButton(
-            textStyle: MyTextStyles.bold(context, 34),
-            height: 120,
+          SizedBox(height: 40),
+          ElevatedButton(
+            style: buttonStyle,
             onPressed: () {
               appState.retrieveEventData('upper year');
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -81,8 +65,50 @@ class CalendarSelectionScreen extends StatelessWidget {
                         )),
               );
             },
-            label: 'Upper Year',
+            child: IconTextLabel(
+              'Upper year',
+              width: buttonWidth,
+              style: buttonTextStyle,
+              icon: calendarIcon,
+            ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class IconTextLabel extends StatelessWidget {
+  const IconTextLabel(
+    this.text, {
+    super.key,
+    required this.style,
+    required this.icon,
+    required this.width,
+  });
+
+  final double width;
+  final TextStyle style;
+  final Widget icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                text,
+                style: style,
+              ),
+            ),
+          ),
+          icon,
         ],
       ),
     );
@@ -98,16 +124,19 @@ class EventCalendar extends StatefulWidget {
   _EventCalendarState createState() => _EventCalendarState();
 }
 
+class EventsPage extends StatefulWidget {
+  const EventsPage({super.key});
+
+  @override
+  State<EventsPage> createState() => _EventsPageState();
+}
+
 class _EventCalendarState extends State<EventCalendar> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
   Map<DateTime, List<Event>>? _events;
-
-  List<Event> _getEventsForDay(DateTime day) {
-    return _events![day] ?? [];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +153,7 @@ class _EventCalendarState extends State<EventCalendar> {
           ),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               height: 200,
@@ -141,12 +170,16 @@ class _EventCalendarState extends State<EventCalendar> {
             Center(
               child: IconButton(
                 iconSize: 50,
-                icon: Icon(Icons.replay),
+                icon: Icon(
+                  Icons.replay,
+                  color: Colors.black,
+                ),
                 onPressed: () async {
                   appState.retrieveEventData(widget.eventType);
                 },
               ),
             ),
+            SizedBox(height: 150)
           ],
         ),
       );
@@ -211,6 +244,19 @@ class _EventCalendarState extends State<EventCalendar> {
         ],
       ),
     );
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    return _events![day] ?? [];
+  }
+}
+
+class _EventsPageState extends State<EventsPage> {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
+    return CalendarSelectionScreen();
   }
 }
 

@@ -17,6 +17,17 @@ class MyButtonStyles {
         backgroundColor: Theme.of(context).colorScheme.background,
         minimumSize: Size(300, 120));
   }
+
+  static ButtonStyle rectButton(
+      BuildContext context, double height, double width, Color color) {
+    return ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+        backgroundColor: color,
+        minimumSize: Size(width, height));
+  }
 }
 
 class MyTextStyles {
@@ -46,16 +57,15 @@ class MyTextStyles {
 
   static TextStyle buttonLarge(BuildContext context) {
     return TextStyle(
-        fontSize: 42,
+        fontSize: 16,
         fontFamily: 'Helvetica',
-        color: Color.fromARGB(255, 45, 45, 45));
+        color: Color.fromARGB(255, 255, 255, 255));
   }
 
   static TextStyle appBarLarge(BuildContext context) {
     return TextStyle(
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: 'Helvetica',
-        fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 85, 56, 136));
+        color: Color.fromARGB(255, 2, 2, 2));
   }
 }

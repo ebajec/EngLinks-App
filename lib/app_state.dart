@@ -75,8 +75,6 @@ class AppState extends ChangeNotifier {
 
     String accountInfoTicket = json.encode(temp);
 
-    _username = username;
-
     try {
       var response = await http.post(validatorUrl, body: accountInfoTicket);
 

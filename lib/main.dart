@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
         title: 'EngLinks App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 85, 56, 136)),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Color.fromARGB(255, 122, 79, 163)),
         ),
         home: MainDisplay(),
       ),

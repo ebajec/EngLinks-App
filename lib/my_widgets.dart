@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'my_styles.dart';
 
 const double accentBarWidth = 220;
+const double accentBarSpacing = 20;
 const Color accentBarColor = Colors.grey;
 
 class AlignedText extends StatelessWidget {
@@ -64,6 +65,31 @@ class AlignedBar extends StatelessWidget {
   }
 }
 
+class FeatureTitle extends StatelessWidget {
+  const FeatureTitle(this.text, {this.textSize = 20, this.spacing = 20});
+
+  final double spacing;
+  final double textSize;
+  final String text;
+  final double _barWidth = 220;
+  final Color _barColor = Colors.grey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        AlignedText(
+          text: text,
+          style: MyTextStyles.bold(context, textSize),
+          alignment: Alignment.centerLeft,
+        ),
+        AlignedBar(width: _barWidth, color: _barColor),
+        SizedBox(height: spacing)
+      ],
+    );
+  }
+}
+
 class WideButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
@@ -87,8 +113,8 @@ class WideButton extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Colors.grey),
-          bottom: BorderSide(color: Colors.grey),
+          top: BorderSide(color: Colors.black),
+          bottom: BorderSide(color: Colors.black),
         ),
       ),
       child: Material(

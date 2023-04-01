@@ -22,19 +22,9 @@ class _OptionsPageState extends State<OptionsPage> {
 
     return Column(
       children: <Widget>[
-        SizedBox(height: 15),
-        AlignedText(
-          text: 'Account',
-          alignment: Alignment.centerLeft,
-          style: MyTextStyles.titleMedium(context),
-        ),
-        AlignedBar(width: accentBarWidth, color: accentBarColor),
+        FeatureTitle('Account', textSize: 26),
         AccountPage(loginState: appState.isLoggedIn()),
-        AlignedText(
-            text: "Debug Options",
-            alignment: Alignment.centerLeft,
-            style: MyTextStyles.titleMedium(context)),
-        AlignedBar(width: accentBarWidth, color: accentBarColor),
+        FeatureTitle('Debug options', textSize: 26),
         DebugPage(),
       ],
     );
@@ -66,7 +56,6 @@ class _AccountPageState extends State<AccountPage> {
     } else {
       return Column(
         children: [
-          SizedBox(height: 10),
           WideButton(
               textStyle: MyTextStyles.bold(context, 18),
               textAlign: Alignment.centerLeft,
@@ -98,38 +87,36 @@ class _DebugPageState extends State<DebugPage> {
 
     var textFocusNode = FocusNode();
 
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          AlignedText(
-            alignment: Alignment.centerLeft,
-            text: 'Edit server url (current: ${appState.serverURL})',
-            style: MyTextStyles.bold(context, 16),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 400,
-              child: TextField(
-                focusNode: textFocusNode,
-                onChanged: (value) {
-                  _serverUrl = value;
-                },
-                onEditingComplete: () {
-                  if (_serverUrl != null && _serverUrl != '') {
-                    appState.setServerURL(_serverUrl!);
-                  }
-                },
-                decoration: InputDecoration(
-                  labelText: 'Example: "localhost"',
-                  border: OutlineInputBorder(),
-                ),
+    return Column(
+      children: [
+        AlignedText(
+          alignment: Alignment.centerLeft,
+          text: 'Edit server url (current: ${appState.serverURL})',
+          style: MyTextStyles.bold(context, 16),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: 400,
+            child: TextField(
+              focusNode: textFocusNode,
+              onChanged: (value) {
+                _serverUrl = value;
+              },
+              onEditingComplete: () {
+                if (_serverUrl != null && _serverUrl != '') {
+                  appState.setServerURL(_serverUrl!);
+                }
+                textFocusNode.unfocus();
+              },
+              decoration: InputDecoration(
+                labelText: 'Example: "localhost"',
+                border: OutlineInputBorder(),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
