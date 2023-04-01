@@ -34,7 +34,7 @@ class MyTextStyles {
   static TextStyle titleLarge(BuildContext context) {
     return TextStyle(
         fontSize: 46,
-        fontFamily: 'Helvetica',
+        fontFamily: 'Futura',
         fontWeight: FontWeight.bold,
         color: Colors.purple);
   }
@@ -42,7 +42,7 @@ class MyTextStyles {
   static TextStyle titleMedium(BuildContext context) {
     return TextStyle(
         fontSize: 28,
-        fontFamily: 'Helvetica',
+        fontFamily: 'Futura',
         fontWeight: FontWeight.bold,
         color: Color.fromARGB(255, 45, 45, 45));
   }
@@ -50,7 +50,7 @@ class MyTextStyles {
   static TextStyle bold(BuildContext context, double size) {
     return TextStyle(
         fontSize: size,
-        fontFamily: 'Helvetica',
+        fontFamily: 'Futura',
         fontWeight: FontWeight.bold,
         color: Color.fromARGB(255, 45, 45, 45));
   }
@@ -58,14 +58,14 @@ class MyTextStyles {
   static TextStyle buttonLarge(BuildContext context) {
     return TextStyle(
         fontSize: 16,
-        fontFamily: 'Helvetica',
+        fontFamily: 'Futura',
         color: Color.fromARGB(255, 255, 255, 255));
   }
 
   static TextStyle appBarLarge(BuildContext context) {
     return TextStyle(
         fontSize: 20,
-        fontFamily: 'Helvetica',
+        fontFamily: 'Futura',
         color: Color.fromARGB(255, 2, 2, 2));
   }
 }

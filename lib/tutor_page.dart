@@ -21,13 +21,18 @@ class TutorPage extends StatefulWidget {
 class _TutorPageState extends State<TutorPage> {
   Widget _loginPopupDialog(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Sorry, but you must be logged in to use this feature.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           Center(
             child: IconButton(
@@ -46,16 +51,31 @@ class _TutorPageState extends State<TutorPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
+    Color listBorderColor = Colors.grey;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 20),
-          FeatureTitle('Tutor Requests', textSize: 26, spacing: 72),
+          FeatureTitle('My requests', textSize: 22, spacing: 0),
+          SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              border: Border(
+                top: BorderSide(width: 1.0, color: listBorderColor),
+                bottom: BorderSide(width: 1.0, color: listBorderColor),
+              ),
+            ),
+            height: 160,
+            width: double.infinity,
+            child: RequestList(),
+          ),
+          SizedBox(height: 30),
           ElevatedButton(
             style: MyButtonStyles.rectButton(
                 context, 28, 220, Theme.of(context).colorScheme.primary),
-            //textStyle: MyTextStyles.bold(context, 30),
             onPressed: () {
               if (appState.isLoggedIn()) {
                 Navigator.push(
@@ -78,6 +98,64 @@ class _TutorPageState extends State<TutorPage> {
         ],
       ),
     );
+  }
+}
+
+class RequestList extends StatefulWidget {
+  @override
+  State<RequestList> createState() => _RequestListState();
+}
+
+class _RequestListState extends State<RequestList> {
+  List<String> requestData = ['pee', 'poo', 'cock'];
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
+    int numRequests = appState.tutorRequestData.length;
+
+    var bold = TextStyle(fontWeight: FontWeight.bold);
+
+    if (numRequests > 0) {
+      return ListView.separated(
+        scrollDirection: Axis.horizontal,
+        primary: false,
+        padding: const EdgeInsets.all(16),
+        itemCount: numRequests,
+        itemBuilder: (BuildContext context, int index) {
+          var data = json.decode(appState.tutorRequestData[index]);
+
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Color.fromARGB(255, 196, 196, 196),
+                width: 2,
+              ),
+            ),
+            width: 150,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  Text('${data['course']}',
+                      style: MyTextStyles.bold(context, 16)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('${data['freq']}'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) =>
+            const SizedBox(width: 10),
+      );
+    }
+
+    return Center(child: Text('You have no active tutor requests.'));
   }
 }
 
@@ -207,10 +285,13 @@ class TutorFormState extends State<TutorForm> {
                     child: Column(
                       children: [
                         //Input for name
-                        AlignedText(
-                          alignment: Alignment.centerLeft,
-                          text: 'Enter your name',
-                          style: boldCaption,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Enter your name',
+                            style: boldCaption,
+                          ),
                         ),
                         TextFormField(
                           onChanged: (value) {
@@ -234,10 +315,13 @@ class TutorFormState extends State<TutorForm> {
                         ),
 
                         //Input for queens email
-                        AlignedText(
-                          alignment: Alignment.centerLeft,
-                          text: 'Enter your email',
-                          style: boldCaption,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Enter your email',
+                            style: boldCaption,
+                          ),
                         ),
                         TextFormField(
                           onChanged: (value) {
@@ -258,10 +342,13 @@ class TutorFormState extends State<TutorForm> {
                         ),
 
                         //Dropdown list for courses
-                        AlignedText(
-                          alignment: Alignment.centerLeft,
-                          text: 'Choose a course',
-                          style: boldCaption,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Choose a course',
+                            style: boldCaption,
+                          ),
                         ),
                         FormDropdownInput<String?>(
                           onSaved: (value) {
@@ -281,10 +368,13 @@ class TutorFormState extends State<TutorForm> {
                         ),
 
                         //Dropdown list for tutoring frequency
-                        AlignedText(
-                          alignment: Alignment.centerLeft,
-                          text: 'Choose a tutoring frequency',
-                          style: boldCaption,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Choose a tutoring frequency',
+                            style: boldCaption,
+                          ),
                         ),
                         FormDropdownInput<String?>(
                           onSaved: (value) {
@@ -302,10 +392,13 @@ class TutorFormState extends State<TutorForm> {
                         ),
 
                         //additional comments box
-                        AlignedText(
-                          alignment: Alignment.centerLeft,
-                          text: 'Additional comments',
-                          style: boldCaption,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Additional comments',
+                            style: boldCaption,
+                          ),
                         ),
                         TextFormField(
                           validator: (value) {
@@ -328,35 +421,33 @@ class TutorFormState extends State<TutorForm> {
                         ),
                       ],
                     )),
+                SizedBox(height: 30),
                 //submission button
-                Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        String formDataJSON = json.encode(formData);
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      String formDataJSON = json.encode(formData);
 
-                        var url = Uri.http(
-                            appState.serverURL, 'recieve_tutor_request');
+                      var url =
+                          Uri.http(appState.serverURL, 'recieve_tutor_request');
 
-                        var response =
-                            await _postTutorRequest(url, formDataJSON, context);
+                      var response =
+                          await _postTutorRequest(url, formDataJSON, context);
 
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(response)));
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).colorScheme.secondary,
-                      onPrimary: Colors.white,
-                      shadowColor: Theme.of(context).colorScheme.outline,
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0)),
-                      minimumSize: Size(100, 50),
-                    ),
-                    child: const Text('Submit request'),
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(response)));
+
+                      appState.retrieveTutorRequestData();
+                    }
+                  },
+                  style: MyButtonStyles.rectButton(
+                    context,
+                    40,
+                    100,
+                    Theme.of(context).colorScheme.primary,
                   ),
+                  child: Text('Submit request',
+                      style: MyTextStyles.buttonLarge(context)),
                 ),
               ],
             ),

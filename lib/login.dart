@@ -21,6 +21,14 @@ class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    pageExited = true;
+    super.dispose();
+  }
+
+  bool pageExited = false;
+
+  @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
@@ -95,18 +103,20 @@ class LoginFormState extends State<LoginForm> {
                             passwordController.text,
                             url);
 
-                        setState(() {
-                          if (appState.isLoggedIn()) {
-                            Navigator.pop(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginForm()),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(attemptResponse!)));
-                          }
-                        });
+                        if (!pageExited) {
+                          setState(() {
+                            if (appState.isLoggedIn()) {
+                              Navigator.pop(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginForm()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(attemptResponse!)));
+                            }
+                          });
+                        }
                       }
                     },
                     child: Text('Login', style: TextStyle(color: Colors.white)),

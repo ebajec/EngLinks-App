@@ -11,13 +11,13 @@ import 'my_styles.dart';
 import 'my_widgets.dart';
 
 class CalendarSelectionScreen extends StatelessWidget {
-  final double buttonWidth = 300;
+  final double buttonWidth = 200;
 
   @override
   Widget build(BuildContext context) {
     TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
     ButtonStyle buttonStyle = MyButtonStyles.rectButton(
-        context, 32, buttonWidth, Theme.of(context).colorScheme.primary);
+        context, 60, buttonWidth, Theme.of(context).colorScheme.primary);
 
     var appState = context.watch<AppState>();
 
@@ -30,7 +30,8 @@ class CalendarSelectionScreen extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 20),
-          FeatureTitle('Event Calendars', textSize: 26, spacing: 40),
+          FeatureTitle('Calendars', textSize: 22),
+          SizedBox(height: 60),
           ElevatedButton(
             style: buttonStyle,
             onPressed: () {

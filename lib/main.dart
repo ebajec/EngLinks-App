@@ -53,6 +53,7 @@ class _MainDisplayState extends State<MainDisplay> {
     ResourcePage(),
     OptionsPage(),
   ];
+  var pageLabels = ['Home', 'Events', 'Tutoring', 'Resources', 'Settings'];
 
   int _selectedIndex = 0;
 
@@ -80,7 +81,11 @@ class _MainDisplayState extends State<MainDisplay> {
           child: MyImage(assetImage: AssetImage("assets/englinks_icon.png")),
         ),
         //Item in top left corner changes depending on login status
-        actions: [AccountButton()],
+        flexibleSpace: Center(
+            child: Text(
+          pageLabels[_selectedIndex],
+          style: MyTextStyles.bold(context, 18),
+        )),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
       ),
@@ -118,55 +123,6 @@ class _MainDisplayState extends State<MainDisplay> {
         unselectedItemColor: Color.fromARGB(255, 150, 104, 170),
         onTap: onItemTapped,
       ),
-    );
-  }
-}
-
-class AccountButton extends StatelessWidget {
-  const AccountButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-
-    List<Widget> elements = [];
-    if (!appState.isLoggedIn()) {
-      elements = [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginForm()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.secondary,
-                backgroundColor: Color.fromARGB(255, 240, 240, 240),
-                shadowColor: Theme.of(context).colorScheme.outline,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(1)),
-                minimumSize: Size(100, 50),
-              ),
-              child: Text('Log in', style: MyTextStyles.bold(context, 20))),
-        )
-      ];
-    } else {
-      elements = [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Hello, ${appState.retrieveUsername()}!',
-              style: MyTextStyles.bold(context, 18)),
-        )
-      ];
-    }
-
-    return Row(
-      children: elements,
     );
   }
 }

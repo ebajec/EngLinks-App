@@ -23,13 +23,10 @@ class AlignedText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: alignment,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          text,
-          style: style,
-          textAlign: textAlign,
-        ),
+      child: Text(
+        text,
+        style: style,
+        textAlign: textAlign,
       ),
     );
   }
@@ -76,16 +73,18 @@ class FeatureTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AlignedText(
-          text: text,
-          style: MyTextStyles.bold(context, textSize),
-          alignment: Alignment.centerLeft,
-        ),
-        AlignedBar(width: _barWidth, color: _barColor),
-        SizedBox(height: spacing)
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+      child: Column(
+        children: [
+          AlignedText(
+            text: text,
+            style: MyTextStyles.bold(context, textSize),
+            alignment: Alignment.centerLeft,
+          ),
+          //AlignedBar(width: _barWidth, color: _barColor),
+        ],
+      ),
     );
   }
 }
@@ -117,15 +116,18 @@ class WideButton extends StatelessWidget {
           bottom: BorderSide(color: Colors.black),
         ),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          child: Center(
-            child: AlignedText(
-              text: label,
-              style: textStyle,
-              alignment: textAlign,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onPressed,
+            child: Center(
+              child: AlignedText(
+                text: label,
+                style: textStyle,
+                alignment: textAlign,
+              ),
             ),
           ),
         ),
