@@ -103,7 +103,7 @@ class AppState extends ChangeNotifier {
 
     var response;
     try {
-      response = await http.post(validatorUrl, body: accountInfoTicket);
+      response = await http.post(validatorUrl, body: accountInfo);
     } catch (e) {
       return 'Unable to contact login server';
     }
