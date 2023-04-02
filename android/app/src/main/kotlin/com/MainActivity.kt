@@ -1,4 +1,4 @@
-package com.example.englinks_app
+package com.englinks_app
 
 import io.flutter.embedding.android.FlutterActivity
 

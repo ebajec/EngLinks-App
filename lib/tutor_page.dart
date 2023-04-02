@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'app_state.dart';
-import 'misc_widgets.dart';
+import 'my_widgets.dart';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
 
 /* Tutoring page will need to have input boxes for the user and a button to send
 the tutor request.  In _TutorPageState, before the build() method, some control 
@@ -17,35 +19,143 @@ class TutorPage extends StatefulWidget {
 }
 
 class _TutorPageState extends State<TutorPage> {
+  Widget _loginPopupDialog(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Sorry, but you must be logged in to use this feature.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          Center(
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.close),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
+    Color listBorderColor = Colors.grey;
+
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                AlignedText(
-                  text: 'Request a Tutor',
-                  style: MyTextStyles.titleMedium(context),
-                  alignment: Alignment.centerLeft,
-                ),
-                AlignedBar(width: 270),
-                if (!appState.isLoggedIn())
-                  AlignedText(
-                      text:
-                          'Sorry, but you must be logged in to use this feature.',
-                      alignment: Alignment.centerLeft),
-              ],
+          SizedBox(height: 20),
+          FeatureTitle('My requests', textSize: 22, spacing: 0),
+          SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              border: Border(
+                top: BorderSide(width: 1.0, color: listBorderColor),
+                bottom: BorderSide(width: 1.0, color: listBorderColor),
+              ),
             ),
+            height: 160,
+            width: double.infinity,
+            child: RequestList(),
           ),
-          if (appState.isLoggedIn()) TutorForm(key: UniqueKey())
+          SizedBox(height: 30),
+          ElevatedButton(
+            style: MyButtonStyles.rectButton(
+                context, 28, 220, Theme.of(context).colorScheme.primary),
+            onPressed: () {
+              if (appState.isLoggedIn()) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TutorForm(key: UniqueKey())),
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => _loginPopupDialog(context),
+                );
+              }
+            },
+            child: Text(
+              'Request a tutor',
+              style: MyTextStyles.buttonLarge(context),
+            ),
+          )
         ],
       ),
     );
+  }
+}
+
+class RequestList extends StatefulWidget {
+  @override
+  State<RequestList> createState() => _RequestListState();
+}
+
+class _RequestListState extends State<RequestList> {
+  List<String> requestData = ['pee', 'poo', 'cock'];
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
+    int numRequests = appState.tutorRequestData.length;
+
+    var bold = TextStyle(fontWeight: FontWeight.bold);
+
+    if (numRequests > 0) {
+      return ListView.separated(
+        scrollDirection: Axis.horizontal,
+        primary: false,
+        padding: const EdgeInsets.all(16),
+        itemCount: numRequests,
+        itemBuilder: (BuildContext context, int index) {
+          var data = json.decode(appState.tutorRequestData[index]);
+
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Color.fromARGB(255, 196, 196, 196),
+                width: 2,
+              ),
+            ),
+            width: 150,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  Text('${data['course']}',
+                      style: MyTextStyles.bold(context, 16)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('${data['freq']}'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) =>
+            const SizedBox(width: 10),
+      );
+    }
+
+    return Center(child: Text('You have no active tutor requests.'));
   }
 }
 
@@ -62,6 +172,9 @@ class TutorForm extends StatefulWidget {
 
 class TutorFormState extends State<TutorForm> {
   final _formKey = GlobalKey<FormState>();
+  String? _selectedCourse;
+  String? _selectedTutorTime;
+  String? _email;
 
   Map<String, String> formData = {
     'user': '',
@@ -71,9 +184,8 @@ class TutorFormState extends State<TutorForm> {
     'comment': ''
   };
 
-  String? _email;
+  List<String> _courses = [];
 
-  List<String> _courses = ['APSC 111', 'APSC 112'];
   List<String> _tutorTimes = [
     'Just Once',
     'Weekly',
@@ -82,10 +194,7 @@ class TutorFormState extends State<TutorForm> {
     'Bi-Monthly'
   ];
 
-  String? _selectedCourse;
-  String? _selectedTutorTime;
-
-  Future<String> postTutorRequest(
+  Future<String> _postTutorRequest(
       Uri url, Object? body, BuildContext context) async {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Sending request...')));
@@ -98,7 +207,7 @@ class TutorFormState extends State<TutorForm> {
     }
   }
 
-  bool validateName(String name) {
+  bool _validateName(String name) {
     int commas = 0;
     int validChars = 0;
 
@@ -129,10 +238,25 @@ class TutorFormState extends State<TutorForm> {
     return (validChars > 0) && (commas == 1);
   }
 
+  void _parseCourseData() async {
+    var data =
+        await DefaultAssetBundle.of(context).loadString("assets/courses.csv");
+
+    setState(() {
+      var courseList = data.split(',');
+      _courses = courseList;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _parseCourseData();
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    double screenWidth = MediaQuery.of(context).size.width;
 
     TextStyle boldCaption = TextStyle(
       fontWeight: FontWeight.bold,
@@ -140,179 +264,201 @@ class TutorFormState extends State<TutorForm> {
       fontFamily: 'Helvetica',
       color: Color.fromARGB(255, 65, 65, 65),
     );
+    double screenWidth = MediaQuery.of(context).size.width;
 
     _formKey.currentState?.activate();
     _formKey.currentState?.save();
 
     formData['user'] = appState.retrieveUsername()!;
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          //This SizedBox is all the input
-          SizedBox(
-              width: screenWidth * 0.9,
-              child: Column(
-                children: [
-                  //Input for name
-                  AlignedText(
-                    alignment: Alignment.centerLeft,
-                    text: 'Enter your name',
-                    style: boldCaption,
-                  ),
-                  TextFormField(
-                    onChanged: (value) {
-                      setState(() {
-                        formData['name'] = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required.';
-                      }
-                      if (!validateName(value)) {
-                        return 'Separate first and last names with a comma.';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'First, Last',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+    return Scaffold(
+      appBar: AppBar(title: Text('Request a tutor')),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                //This SizedBox is all the input
+                SizedBox(
+                    width: screenWidth * 0.9,
+                    child: Column(
+                      children: [
+                        //Input for name
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Enter your name',
+                            style: boldCaption,
+                          ),
+                        ),
+                        TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              formData['name'] = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'This field is required.';
+                            }
+                            if (!_validateName(value)) {
+                              return 'Separate first and last names with a comma.';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'First, Last',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
 
-                  //Input for queens email
-                  AlignedText(
-                    alignment: Alignment.centerLeft,
-                    text: 'Enter your email',
-                    style: boldCaption,
-                  ),
-                  TextFormField(
-                    onChanged: (value) {
-                      setState(() {
-                        _email = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required.';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'example@queensu.ca',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                        //Input for queens email
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Enter your email',
+                            style: boldCaption,
+                          ),
+                        ),
+                        TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              _email = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'This field is required.';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'example@queensu.ca',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
 
-                  //Dropdown list for courses
-                  AlignedText(
-                    alignment: Alignment.centerLeft,
-                    text: 'Choose a course',
-                    style: boldCaption,
-                  ),
-                  FormDropdownInput<String?>(
-                    onSaved: (value) {
-                      setState(() {
-                        if (value != null) formData['course'] = value;
-                      });
-                    },
-                    value: _selectedCourse,
-                    items: _courses,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedCourse = value;
-                      });
-                    },
-                    errorText: 'No course was selected!',
-                    hintText: 'Select course...',
-                  ),
+                        //Dropdown list for courses
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Choose a course',
+                            style: boldCaption,
+                          ),
+                        ),
+                        FormDropdownInput<String?>(
+                          onSaved: (value) {
+                            setState(() {
+                              if (value != null) formData['course'] = value;
+                            });
+                          },
+                          value: _selectedCourse,
+                          items: _courses,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedCourse = value;
+                            });
+                          },
+                          errorText: 'No course was selected!',
+                          hintText: 'Select course...',
+                        ),
 
-                  //Dropdown list for tutoring frequency
-                  AlignedText(
-                    alignment: Alignment.centerLeft,
-                    text: 'Choose a tutoring frequency',
-                    style: boldCaption,
-                  ),
-                  FormDropdownInput<String?>(
-                    onSaved: (value) {
-                      if (value != null) formData['freq'] = value;
-                    },
-                    value: _selectedTutorTime,
-                    items: _tutorTimes,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedTutorTime = value;
-                      });
-                    },
-                    errorText: 'No times were selected!',
-                    hintText: 'Select frequency...',
-                  ),
+                        //Dropdown list for tutoring frequency
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Choose a tutoring frequency',
+                            style: boldCaption,
+                          ),
+                        ),
+                        FormDropdownInput<String?>(
+                          onSaved: (value) {
+                            if (value != null) formData['freq'] = value;
+                          },
+                          value: _selectedTutorTime,
+                          items: _tutorTimes,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedTutorTime = value;
+                            });
+                          },
+                          errorText: 'No times were selected!',
+                          hintText: 'Select frequency...',
+                        ),
 
-                  //additional comments box
-                  AlignedText(
-                    alignment: Alignment.centerLeft,
-                    text: 'Additional comments',
-                    style: boldCaption,
+                        //additional comments box
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AlignedText(
+                            alignment: Alignment.centerLeft,
+                            text: 'Additional comments',
+                            style: boldCaption,
+                          ),
+                        ),
+                        TextFormField(
+                          validator: (value) {
+                            String? comment = formData['comment'];
+                            if (comment != '' && comment!.length > 1024) {
+                              return 'Character limit is 1024';
+                            }
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              formData['comment'] = value;
+                            });
+                          },
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            hintText: 'Enter comments...',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    )),
+                SizedBox(height: 30),
+                //submission button
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      String formDataJSON = json.encode(formData);
+
+                      var url =
+                          Uri.http(appState.serverURL, 'recieve_tutor_request');
+
+                      var response =
+                          await _postTutorRequest(url, formDataJSON, context);
+
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(response)));
+
+                      appState.retrieveTutorRequestData();
+                    }
+                  },
+                  style: MyButtonStyles.rectButton(
+                    context,
+                    40,
+                    100,
+                    Theme.of(context).colorScheme.primary,
                   ),
-                  TextFormField(
-                    validator: (value) {
-                      String? comment = formData['comment'];
-                      if (comment != '' && comment!.length > 1024) {
-                        return 'Character limit is 1024';
-                      }
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        formData['comment'] = value;
-                      });
-                    },
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      hintText: 'Enter comments...',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ],
-              )),
-          //submission button
-          Padding(
-            padding: const EdgeInsets.all(18),
-            child: ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  String formDataJSON = json.encode(formData);
-
-                  var url =
-                      Uri.http(appState.serverURL, 'recieve_tutor_request');
-
-                  var response =
-                      await postTutorRequest(url, formDataJSON, context);
-
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(response)));
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).colorScheme.secondary,
-                onPrimary: Colors.white,
-                shadowColor: Theme.of(context).colorScheme.outline,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0)),
-                minimumSize: Size(100, 50),
-              ),
-              child: const Text('Submit request'),
+                  child: Text('Submit request',
+                      style: MyTextStyles.buttonLarge(context)),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
+// ignore: must_be_immutable
 class FormDropdownInput<T> extends StatelessWidget {
   final List<T> items;
   final String hintText;
