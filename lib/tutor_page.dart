@@ -109,6 +109,85 @@ class RequestList extends StatefulWidget {
 class _RequestListState extends State<RequestList> {
   List<String> requestData = ['pee', 'poo', 'cock'];
 
+  Widget _requestDeleteDialog(BuildContext context, int requestIndex) {
+    var appState = context.watch<AppState>();
+
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Are you sure you would like to cancel your request?',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                  onPressed: () async {
+                    appState.deleteTutorRequest(requestIndex);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Yes')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _requestViewDialog(BuildContext context, int index) {
+    var appState = context.watch<AppState>();
+
+    var data;
+    Widget body;
+
+    try {
+      data = json.decode(appState.tutorRequestData[index]);
+      body = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(data['course']),
+          Text(data['freq']),
+          Text(data['comment']),
+        ],
+      );
+    } catch (e) {
+      body = Text('There was an error loading request data');
+    }
+
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      content: body,
+      actions: [
+        Center(
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.close),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
@@ -124,19 +203,22 @@ class _RequestListState extends State<RequestList> {
         padding: const EdgeInsets.all(16),
         itemCount: numRequests,
         itemBuilder: (BuildContext context, int index) {
-          var data = json.decode(appState.tutorRequestData[index]);
+          var data;
 
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Color.fromARGB(255, 196, 196, 196),
-                width: 2,
+          //The try block is just for the case that a bad file gets placed in the
+          //directory by accident
+          try {
+            data = json.decode(appState.tutorRequestData[index]);
+
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Color.fromARGB(255, 196, 196, 196),
+                  width: 2,
+                ),
               ),
-            ),
-            width: 150,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              width: 150,
               child: Column(
                 children: [
                   Text('${data['course']}',
@@ -145,10 +227,47 @@ class _RequestListState extends State<RequestList> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text('${data['freq']}'),
                   ),
+                  SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  _requestViewDialog(context, index),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.more_horiz,
+                            color: Colors.grey,
+                            size: 20,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  _requestDeleteDialog(context, index),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-          );
+            );
+          } catch (e) {}
         },
         separatorBuilder: (BuildContext context, int index) =>
             const SizedBox(width: 10),
@@ -238,7 +357,7 @@ class TutorFormState extends State<TutorForm> {
     return (validChars > 0) && (commas == 1);
   }
 
-  void _parseCourseData() async {
+  void _loadCourseData() async {
     var data =
         await DefaultAssetBundle.of(context).loadString("assets/courses.csv");
 
@@ -251,7 +370,7 @@ class TutorFormState extends State<TutorForm> {
   @override
   void initState() {
     super.initState();
-    _parseCourseData();
+    _loadCourseData();
   }
 
   @override
