@@ -73,16 +73,12 @@ class AppState extends ChangeNotifier {
       String username, String password, Uri validatorUrl) async {
     Map<String, String> temp = {'username': username, 'password': password};
 
-    String accountInfoTicket = json.encode(temp);
+    String accountInfo = json.encode(temp);
 
     _username = username;
 
-    notifyListeners();
-    return 'Forced login';
-
     try {
-      //We should encrypt this
-      var response = await http.post(validatorUrl, body: accountInfoTicket);
+      var response = await http.post(validatorUrl, body: accountInfo);
 
       var responseInfo = json.decode(response.body);
 
