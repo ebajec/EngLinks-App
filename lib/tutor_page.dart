@@ -58,7 +58,7 @@ class _TutorPageState extends State<TutorPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 20),
-          FeatureTitle('My requests', textSize: 22, spacing: 0),
+          FeatureTitle('Active requests', textSize: 22, spacing: 0),
           SizedBox(height: 20),
           Container(
             decoration: BoxDecoration(
