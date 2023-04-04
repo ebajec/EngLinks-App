@@ -227,9 +227,7 @@ class _RequestListState extends State<RequestList> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text('${data['freq']}'),
                   ),
-                  SizedBox(height: 15),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
+                  Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -357,20 +355,25 @@ class TutorFormState extends State<TutorForm> {
     return (validChars > 0) && (commas == 1);
   }
 
-  void _loadCourseData() async {
-    var data =
-        await DefaultAssetBundle.of(context).loadString("assets/courses.csv");
+  void _loadCourseData(BuildContext context) async {
+    var appState = context.watch<AppState>();
+
+    var url = Uri.http(appState.serverURL, 'load/courses.csv');
+    var response;
+    try {
+      response = await http.get(url);
+    } catch (e) {
+      return;
+    }
+
+    String data = response.body;
+
+    //await DefaultAssetBundle.of(context).loadString("assets/courses.csv");
 
     setState(() {
       var courseList = data.split(',');
       _courses = courseList;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCourseData();
   }
 
   @override
@@ -389,6 +392,10 @@ class TutorFormState extends State<TutorForm> {
     _formKey.currentState?.save();
 
     formData['user'] = appState.retrieveUsername()!;
+
+    if (_courses.length < 2) {
+      _loadCourseData(context);
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text('Request a tutor')),

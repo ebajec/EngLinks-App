@@ -12,16 +12,13 @@ should be contained within the state of that page.
 */
 class AppState extends ChangeNotifier {
   String serverURL = 'localhost';
-
   bool loginNotifier = false;
   String? _username;
-
   Map<String, Map<DateTime, List<Event>>> events = {
     'first year': {},
     'upper year': {},
     'misc': {}
   };
-
   List tutorRequestData = [];
 
   AppState() {
