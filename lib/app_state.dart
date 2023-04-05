@@ -22,9 +22,39 @@ class AppState extends ChangeNotifier {
     'misc': {}
   };
 
+  List tutorRequestData = [];
+
   AppState() {
     retrieveEventData('first year');
     retrieveEventData('upper year');
+  }
+
+  Future<bool> deleteTutorRequest(int index) async {
+    return false;
+  }
+
+  Future<bool> retrieveTutorRequestData() async {
+    var url = Uri.http(serverURL, 'read_tutor_requests');
+    // ignore: prefer_typing_uninitialized_variables
+    var response;
+
+    try {
+      response = await http.post(url, body: '{"username":"$_username"}');
+    } catch (e) {
+      return false;
+    }
+
+    List dataJSON;
+    try {
+      dataJSON = json.decode(response.body);
+    } catch (e) {
+      return false;
+    }
+
+    tutorRequestData = dataJSON;
+
+    notifyListeners();
+    return true;
   }
 
   void setServerURL(String url) {
@@ -45,7 +75,7 @@ class AppState extends ChangeNotifier {
       return false;
     }
 
-    var url = Uri.http(serverURL, 'event_data/$filename');
+    var url = Uri.http(serverURL, 'load/$filename');
     var response;
 
     try {
@@ -54,7 +84,12 @@ class AppState extends ChangeNotifier {
       return false;
     }
 
-    var eventData = parseEventData(response.body);
+    var eventData;
+    try {
+      eventData = parseEventData(response.body);
+    } catch (e) {
+      return false;
+    }
 
     events[type] = eventData;
     notifyListeners();
@@ -73,44 +108,47 @@ class AppState extends ChangeNotifier {
       String username, String password, Uri validatorUrl) async {
     Map<String, String> temp = {'username': username, 'password': password};
 
-    String accountInfoTicket = json.encode(temp);
+    String accountInfo = json.encode(temp);
 
-    _username = username;
-
-    notifyListeners();
-    return 'Forced login';
-
+    var response;
     try {
-      //We should encrypt this
-      var response = await http.post(validatorUrl, body: accountInfoTicket);
-
-      var responseInfo = json.decode(response.body);
-
-      bool passwordCheck = responseInfo['passwordCheck']!;
-      bool usernameCheck = responseInfo['usernameCheck']!;
-
-      if (passwordCheck == false && usernameCheck == false) {
-        return 'invalid username and password';
-      }
-      if (usernameCheck == false) {
-        return 'Invalid username';
-      }
-      if (passwordCheck == false) {
-        return 'Invalid username';
-      }
-
-      _username = username;
-
-      notifyListeners();
-      return 'Login successful!';
+      response = await http.post(validatorUrl, body: accountInfo);
     } catch (e) {
       return 'Unable to contact login server';
     }
+
+    var responseInfo;
+    try {
+      responseInfo = json.decode(response.body);
+    } catch (e) {
+      return 'Bad response. Please notify server admins.';
+    }
+
+    bool passwordCheck = responseInfo['passwordCheck']!;
+    bool usernameCheck = responseInfo['usernameCheck']!;
+
+    if (passwordCheck == false && usernameCheck == false) {
+      return 'invalid username and password';
+    }
+    if (usernameCheck == false) {
+      return 'Invalid username';
+    }
+    if (passwordCheck == false) {
+      return 'Invalid username';
+    }
+
+    _username = username;
+
+    retrieveTutorRequestData();
+
+    notifyListeners();
+    return 'Login successful!';
   }
 
   void logout() {
     _username = null;
     loginNotifier = true;
+    tutorRequestData = [];
     notifyListeners();
   }
 }

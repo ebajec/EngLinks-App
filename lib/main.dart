@@ -1,4 +1,5 @@
 import 'package:englinks_app/login.dart';
+import 'package:englinks_app/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
@@ -9,10 +10,7 @@ import 'resource_page.dart';
 import 'options_page.dart';
 import 'my_styles.dart';
 import 'package:http/http.dart' as http;
-
-
-
-String serverUrl = '192.168.2.92:5000';
+import 'dart:io';
 
 void main() {
   runApp(MyApp());
@@ -29,8 +27,8 @@ class MyApp extends StatelessWidget {
         title: 'EngLinks App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 85, 56, 136)),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Color.fromARGB(255, 122, 79, 163)),
         ),
         home: MainDisplay(),
       ),
@@ -55,6 +53,7 @@ class _MainDisplayState extends State<MainDisplay> {
     ResourcePage(),
     OptionsPage(),
   ];
+  var pageLabels = ['Home', 'Events', 'Tutoring', 'Resources', 'Settings'];
 
   int _selectedIndex = 0;
 
@@ -75,13 +74,20 @@ class _MainDisplayState extends State<MainDisplay> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "EngLinks",
-          style: MyTextStyles.appBarLarge(context),
+        shadowColor: Colors.grey,
+        title: SizedBox(
+          width: 65,
+          height: 65,
+          child: MyImage(assetImage: AssetImage("assets/englinks_icon.png")),
         ),
         //Item in top left corner changes depending on login status
-        actions: [AccountButton()],
-        backgroundColor: Color.fromARGB(255, 240, 240, 240),
+        flexibleSpace: Center(
+            child: Text(
+          pageLabels[_selectedIndex],
+          style: MyTextStyles.bold(context, 18),
+        )),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: IndexedStack(
@@ -117,55 +123,6 @@ class _MainDisplayState extends State<MainDisplay> {
         unselectedItemColor: Color.fromARGB(255, 150, 104, 170),
         onTap: onItemTapped,
       ),
-    );
-  }
-}
-
-class AccountButton extends StatelessWidget {
-  const AccountButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-
-    List<Widget> elements = [];
-    if (!appState.isLoggedIn()) {
-      elements = [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginForm()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.secondary,
-                backgroundColor: Color.fromARGB(255, 240, 240, 240),
-                shadowColor: Theme.of(context).colorScheme.outline,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(1)),
-                minimumSize: Size(100, 50),
-              ),
-              child: Text('Log in', style: MyTextStyles.bold(context, 20))),
-        )
-      ];
-    } else {
-      elements = [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Logged in as ${appState.retrieveUsername()}',
-              style: MyTextStyles.bold(context, 18)),
-        )
-      ];
-    }
-
-    return Row(
-      children: elements,
     );
   }
 }

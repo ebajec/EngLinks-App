@@ -1,82 +1,115 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'app_state.dart';
-import 'my_styles.dart';
-import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
+
+import 'app_state.dart';
 import 'event_data.dart';
-import 'misc_widgets.dart';
-
-class EventsPage extends StatefulWidget {
-  const EventsPage({super.key});
-
-  @override
-  State<EventsPage> createState() => _EventsPageState();
-}
-
-class _EventsPageState extends State<EventsPage> {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-
-    return CalendarSelectionScreen();
-  }
-}
+import 'my_styles.dart';
+import 'my_widgets.dart';
 
 class CalendarSelectionScreen extends StatelessWidget {
-  final double buttonSpacing = 30;
+  final double buttonWidth = 200;
 
   @override
   Widget build(BuildContext context) {
     TextStyle buttonTextStyle = MyTextStyles.buttonLarge(context);
-    ButtonStyle buttonStyle = MyButtonStyles.buttonStyleLarge(context);
+    ButtonStyle buttonStyle = MyButtonStyles.rectButton(
+        context, 60, buttonWidth, Theme.of(context).colorScheme.primary);
 
     var appState = context.watch<AppState>();
+
+    Widget calendarIcon = Icon(
+      Icons.calendar_month,
+      color: Colors.white,
+    );
 
     return Center(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(66),
-            child: Text('Event Calendars',
-                style: MyTextStyles.titleMedium(context)),
+          SizedBox(height: 20),
+          FeatureTitle('Calendars', textSize: 22),
+          SizedBox(height: 60),
+          ElevatedButton(
+            style: buttonStyle,
+            onPressed: () {
+              appState.retrieveEventData('first year');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EventCalendar(
+                          title: 'First year events',
+                          eventType: 'first year',
+                        )),
+              );
+            },
+            child: IconTextLabel(
+              'First year',
+              width: buttonWidth,
+              style: buttonTextStyle,
+              icon: calendarIcon,
+            ),
           ),
+          SizedBox(height: 40),
           ElevatedButton(
-              style: buttonStyle,
-              onPressed: () {
-                appState.retrieveEventData('first year');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EventCalendar(
-                            title: 'First year events',
-                            eventType: 'first year',
-                          )),
-                );
-              },
-              child: Text(
-                'First Year',
-                style: buttonTextStyle,
-              )),
-          SizedBox(height: buttonSpacing),
-          ElevatedButton(
-              style: buttonStyle,
-              onPressed: () {
-                appState.retrieveEventData('upper year');
+            style: buttonStyle,
+            onPressed: () {
+              appState.retrieveEventData('upper year');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EventCalendar(
+                          title: 'Upper year events',
+                          eventType: 'upper year',
+                        )),
+              );
+            },
+            child: IconTextLabel(
+              'Upper year',
+              width: buttonWidth,
+              style: buttonTextStyle,
+              icon: calendarIcon,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EventCalendar(
-                            title: 'Upper year events',
-                            eventType: 'upper year',
-                          )),
-                );
-              },
+class IconTextLabel extends StatelessWidget {
+  const IconTextLabel(
+    this.text, {
+    super.key,
+    required this.style,
+    required this.icon,
+    required this.width,
+  });
+
+  final double width;
+  final TextStyle style;
+  final Widget icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomLeft,
               child: Text(
-                'Upper Year',
-                style: buttonTextStyle,
-              ))
+                text,
+                style: style,
+              ),
+            ),
+          ),
+          icon,
         ],
       ),
     );
@@ -92,16 +125,19 @@ class EventCalendar extends StatefulWidget {
   _EventCalendarState createState() => _EventCalendarState();
 }
 
+class EventsPage extends StatefulWidget {
+  const EventsPage({super.key});
+
+  @override
+  State<EventsPage> createState() => _EventsPageState();
+}
+
 class _EventCalendarState extends State<EventCalendar> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
   Map<DateTime, List<Event>>? _events;
-
-  List<Event> _getEventsForDay(DateTime day) {
-    return _events![day] ?? [];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,20 +154,33 @@ class _EventCalendarState extends State<EventCalendar> {
           ),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+              height: 200,
+              width: 160,
+              child: MyImage(
+                  assetImage: AssetImage("assets/broken_chain_icon.png")),
+            ),
             AlignedText(
-              text: 'Failed to load event data. Retry?',
-              style: MyTextStyles.titleMedium(context),
+              text: 'Failed to load event data. \nRetry?',
+              style: MyTextStyles.bold(context, 18),
               alignment: Alignment.center,
+              textAlign: TextAlign.center,
             ),
             Center(
               child: IconButton(
-                icon: Icon(Icons.replay),
+                iconSize: 50,
+                icon: Icon(
+                  Icons.replay,
+                  color: Colors.black,
+                ),
                 onPressed: () async {
                   appState.retrieveEventData(widget.eventType);
                 },
               ),
             ),
+            SizedBox(height: 150)
           ],
         ),
       );
@@ -196,6 +245,19 @@ class _EventCalendarState extends State<EventCalendar> {
         ],
       ),
     );
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    return _events![day] ?? [];
+  }
+}
+
+class _EventsPageState extends State<EventsPage> {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
+    return CalendarSelectionScreen();
   }
 }
 

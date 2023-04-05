@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'my_styles.dart';
-import 'misc_widgets.dart';
+import 'my_widgets.dart';
 import 'app_state.dart';
 import 'dart:math';
+import 'login.dart';
 
 /*This should mostly just be accessibility options and login settings. */
 class OptionsPage extends StatefulWidget {
@@ -20,25 +21,15 @@ class _OptionsPageState extends State<OptionsPage> {
 
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          AlignedText(
-            text: 'Account',
-            alignment: Alignment.centerLeft,
-            style: MyTextStyles.titleMedium(context),
-          ),
-          AlignedBar(width: 270),
-          AccountPage(loginState: appState.isLoggedIn()),
-          AlignedText(
-              text: "Debug Options",
-              alignment: Alignment.centerLeft,
-              style: MyTextStyles.titleMedium(context)),
-          AlignedBar(width: 270),
-          DebugPage(),
-        ],
-      ),
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 20),
+        FeatureTitle('Account', textSize: 22, spacing: 5),
+        AccountPage(loginState: appState.isLoggedIn()),
+        SizedBox(height: 20),
+        FeatureTitle('Debug options', textSize: 22, spacing: 5),
+        DebugPage(),
+      ],
     );
   }
 }
@@ -61,15 +52,41 @@ class _AccountPageState extends State<AccountPage> {
     var appState = context.watch<AppState>();
 
     if (!widget.loginState) {
-      return AlignedText(
-        text: 'You are not logged in. Log in to view account details.',
-        alignment: Alignment.centerLeft,
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AlignedText(
+              text: 'You are not logged in. Log in to view account details.',
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          WideButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginForm()),
+              );
+            },
+            label: 'Log in',
+            textStyle: MyTextStyles.bold(context, 18),
+            textAlign: Alignment.centerLeft,
+          ),
+        ],
       );
     } else {
       return Column(
         children: [
-          SizedBox(height: 10),
-          OptionButton(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AlignedText(
+              text: 'Hello, ${appState.retrieveUsername()}!',
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          WideButton(
+              textStyle: MyTextStyles.bold(context, 18),
+              textAlign: Alignment.centerLeft,
               label: 'Log out',
               onPressed: () {
                 appState.logout();
@@ -96,74 +113,41 @@ class _DebugPageState extends State<DebugPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
 
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          AlignedText(
+    var textFocusNode = FocusNode();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AlignedText(
             alignment: Alignment.centerLeft,
             text: 'Edit server url (current: ${appState.serverURL})',
             style: MyTextStyles.bold(context, 16),
           ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 400,
-              child: TextField(
-                onChanged: (value) {
-                  _serverUrl = value;
-                },
-                onEditingComplete: () {
-                  if (_serverUrl != null && _serverUrl != '') {
-                    appState.setServerURL(_serverUrl!);
-                  }
-                },
-                decoration: InputDecoration(
-                  labelText: 'Example: "localhost"',
-                  border: OutlineInputBorder(),
-                ),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              focusNode: textFocusNode,
+              onChanged: (value) {
+                _serverUrl = value;
+              },
+              onEditingComplete: () {
+                if (_serverUrl != null && _serverUrl != '') {
+                  appState.setServerURL(_serverUrl!);
+                }
+                textFocusNode.unfocus();
+              },
+              decoration: InputDecoration(
+                labelText: 'Example: "localhost"',
+                border: OutlineInputBorder(),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class OptionButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  const OptionButton({
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.grey),
-          bottom: BorderSide(color: Colors.grey),
         ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          child: Center(
-            child: AlignedText(
-              text: label,
-              style: MyTextStyles.bold(context, 18),
-              alignment: Alignment.centerLeft,
-            ),
-          ),
-        ),
-      ),
+      ],
     );
   }
 }
