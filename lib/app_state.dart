@@ -59,6 +59,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Get event data from server for event type specified by String.
+  ///
+  /// 'first year' gets first year events, 'upper year' gets upper year events,
+  /// and 'misc' gets anything without a course code in the title.
   Future<bool> retrieveEventData(String type) async {
     String filename;
 
@@ -73,7 +77,7 @@ class AppState extends ChangeNotifier {
     }
 
     var url = Uri.http(serverURL, 'load/$filename');
-    var response;
+    http.Response response;
 
     try {
       response = await http.get(url);
@@ -101,13 +105,18 @@ class AppState extends ChangeNotifier {
     return _username != null;
   }
 
+  /// Attempts to login by sending a json string with 'username' and 'password'
+  /// fields
+  ///
+  /// Server must return a boolean expression for both the password and username,
+  /// indicating whether the username exists and if the password is valid.
   Future<String?> attemptLogin(
       String username, String password, Uri validatorUrl) async {
     Map<String, String> temp = {'username': username, 'password': password};
 
     String accountInfo = json.encode(temp);
 
-    var response;
+    http.Response response;
     try {
       response = await http.post(validatorUrl, body: accountInfo);
     } catch (e) {
@@ -118,20 +127,17 @@ class AppState extends ChangeNotifier {
     try {
       responseInfo = json.decode(response.body);
     } catch (e) {
-      return 'Bad response. Please notify server admins.';
+      return 'Bad response. Something went wrong on the server :(';
     }
 
     bool passwordCheck = responseInfo['passwordCheck']!;
     bool usernameCheck = responseInfo['usernameCheck']!;
 
-    if (passwordCheck == false && usernameCheck == false) {
-      return 'invalid username and password';
-    }
     if (usernameCheck == false) {
-      return 'Invalid username';
+      return 'Username does not exist!';
     }
     if (passwordCheck == false) {
-      return 'Invalid username';
+      return 'Invalid password';
     }
 
     _username = username;

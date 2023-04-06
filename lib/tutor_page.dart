@@ -324,6 +324,7 @@ class TutorFormState extends State<TutorForm> {
     }
   }
 
+  /// Verifies that String is two things separated by a single comma.
   bool _validateName(String name) {
     int commas = 0;
     int validChars = 0;
