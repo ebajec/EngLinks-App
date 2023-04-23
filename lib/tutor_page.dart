@@ -8,9 +8,6 @@ import 'my_widgets.dart';
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 
-/* Tutoring page will need to have input boxes for the user and a button to send
-the tutor request.  In _TutorPageState, before the build() method, some control 
-flow will need to assess whether or not the user is logged in. */
 class TutorPage extends StatefulWidget {
   const TutorPage({super.key});
 
@@ -101,14 +98,14 @@ class _TutorPageState extends State<TutorPage> {
   }
 }
 
+//Horizontal list view for displaying active requests.
 class RequestList extends StatefulWidget {
   @override
   State<RequestList> createState() => _RequestListState();
 }
 
 class _RequestListState extends State<RequestList> {
-  List<String> requestData = ['pee', 'poo', 'cock'];
-
+  //This shows up when the red X is pressed.  Currently does nothing.
   Widget _requestDeleteDialog(BuildContext context, int requestIndex) {
     var appState = context.watch<AppState>();
 
@@ -148,6 +145,7 @@ class _RequestListState extends State<RequestList> {
     );
   }
 
+  //Shows up when three dots are pressed.  Shows all request data.
   Widget _requestViewDialog(BuildContext context, int index) {
     var appState = context.watch<AppState>();
 
@@ -369,8 +367,6 @@ class TutorFormState extends State<TutorForm> {
 
     String data = response.body;
 
-    //await DefaultAssetBundle.of(context).loadString("assets/courses.csv");
-
     setState(() {
       var courseList = data.split(',');
       _courses = courseList;
@@ -585,6 +581,7 @@ class TutorFormState extends State<TutorForm> {
   }
 }
 
+//Dropdown box
 // ignore: must_be_immutable
 class FormDropdownInput<T> extends StatelessWidget {
   final List<T> items;
