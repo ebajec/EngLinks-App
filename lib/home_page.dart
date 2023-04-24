@@ -21,8 +21,8 @@ class _HomePageState extends State<HomePage> {
     var iconPadding = const EdgeInsets.fromLTRB(12.0, 0, 12, 12);
     var nameStyle = TextStyle(color: Colors.black, fontSize: 16);
 
-    String email_first_year = "englinks.firstyear@engsoc.queensu.ca";
-    String email_upper_year = "englinks.upperyear@engsoc.queensu.ca";
+    String emailFirstYear = "englinks.firstyear@engsoc.queensu.ca";
+    String emailUpperYear = "englinks.upperyear@engsoc.queensu.ca";
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                   child: ContactDisplay(
                     name: "Sasha Koch",
                     nameStyle: nameStyle,
-                    email: email_first_year,
+                    email: emailFirstYear,
                     description: "EngLinks First-Year Manager",
                   ),
                 ),
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                   child: ContactDisplay(
                     name: "Hannah Lacey",
                     nameStyle: nameStyle,
-                    email: email_upper_year,
+                    email: emailUpperYear,
                     description: "EngLinks Upper-Year Manager",
                   ),
                 ),
