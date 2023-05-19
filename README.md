@@ -5,7 +5,7 @@ Currently, there is an event calendar, a small settings page, and the ability fo
 
 **Setup:** Requires working Flutter installation to run, along with an instance of the [server](https://github.com/ebajec/EngLinks-App-Server) running on the same network. The server URL can be specified within the app while running, set to 'localhost' by default.  While not techincally required, most features will not do much without a connection to the server.
 
-**Login:** A connection to the server is currently required to login, but any input will give a valid login.  This is just a proof of concept. 
+**Login:** A connection to the server is currently required to login, but any input will give a valid login. 
 
 
 
