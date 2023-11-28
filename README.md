@@ -1,4 +1,4 @@
-# EngLinks-App
+# englinks-app
 
 Prototype mobile app for EngLinks, built with Flutter.  The main purpose of this is to allow students to match with tutors, along with a few other features.
 Currently, there is an event calendar, a small settings page, and the ability for users to send/view tutor requests.  This is more of a proof-of-concept, as opposed to a fully functioning app.
